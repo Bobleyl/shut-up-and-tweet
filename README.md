@@ -1,16 +1,5 @@
 # shut_up_and_tweet
 
-A new Flutter project.
+This app is meant to be used to strategize tweets for Twitter. Evolution of the idea and app are ongoing, so there probably will be various revisions and changes over time. The main idea is to allow users to set up various categories of tweets that they should cycle through on a regular basis.  Website will provide several feeds that they can store and organize their tweets through.  
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+The hope is that it will be a place where users can store their tweet ideas and map out a solid strategy for the future weeks so that they don't need to put so much daily thought into their tweets, but rather can add to and organize on a regularly scheduled day of the week to save themselves time and energy.
