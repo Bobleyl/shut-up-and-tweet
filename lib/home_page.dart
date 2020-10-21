@@ -112,7 +112,7 @@ class _HomeInfoState extends State<HomeInfo> {
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
 
-    showPopup(int section) {
+    AwesomeDialog showPopup(int section) {
       return AwesomeDialog(
         context: context,
         width: screenSize.width / 2,
@@ -180,478 +180,135 @@ class _HomeInfoState extends State<HomeInfo> {
       )..show();
     }
 
-    final topLeft = Container(
-      decoration: BoxDecoration(
-        color: Color(0xff243341),
-        borderRadius: BorderRadius.circular(5.0),
-      ),
-      width: screenSize.width / 2.3,
-      height: screenSize.height / 2.6,
-      child: Stack(
-        children: [
-          StreamBuilder(
-            stream: FirebaseFirestore.instance
-                .collection('Users')
-                .doc(FirebaseAuth.instance.currentUser.uid)
-                .collection('Strategy')
-                .doc(sections[0])
-                .collection("Backlog")
-                .snapshots(),
-            builder:
-                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (!snapshot.hasData) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-
-              return ListView(
-                children: snapshot.data.docs.map((document) {
+    Widget gridBox(int section) {
+      return Container(
+        decoration: BoxDecoration(
+          color: Color(0xff243341),
+          borderRadius: BorderRadius.circular(5.0),
+        ),
+        width: screenSize.width / 2.3,
+        height: screenSize.height / 2.6,
+        child: Stack(
+          children: [
+            StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection('Users')
+                  .doc(FirebaseAuth.instance.currentUser.uid)
+                  .collection('Strategy')
+                  .doc(sections[section])
+                  .collection("Backlog")
+                  .snapshots(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (!snapshot.hasData) {
                   return Center(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 10.0,
-                      ),
-                      child: Container(
-                        width: screenSize.width / 2.5,
-                        decoration: BoxDecoration(
-                          color: Color(0xff15202b),
+                    child: CircularProgressIndicator(),
+                  );
+                }
+
+                return ListView(
+                  children: snapshot.data.docs.map((document) {
+                    return Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          vertical: 10.0,
                         ),
-                        child: Padding(
-                          padding: EdgeInsets.all(5.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "@" + handle,
-                                style: GoogleFonts.roboto(
-                                  color: Color(0xff45535e),
-                                  fontSize: 15.0,
+                        child: Container(
+                          width: screenSize.width / 2.5,
+                          decoration: BoxDecoration(
+                            color: Color(0xff15202b),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(5.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "@" + handle,
+                                  style: GoogleFonts.roboto(
+                                    color: Color(0xff45535e),
+                                    fontSize: 15.0,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                document['Tweet'],
-                                maxLines: 5,
-                                style: GoogleFonts.roboto(
-                                  color: Colors.white,
-                                  fontSize: 20.0,
+                                Text(
+                                  document['Tweet'],
+                                  maxLines: 5,
+                                  style: GoogleFonts.roboto(
+                                    color: Colors.white,
+                                    fontSize: 20.0,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                }).toList(),
-              );
-            },
-          ),
-          Container(
-            decoration: BoxDecoration(
-              color: Color(0xff15202b),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(5.0),
-                topRight: Radius.circular(5.0),
-              ),
-            ),
-            child: Padding(
-              padding: EdgeInsets.only(
-                top: 5.0,
-                bottom: 5.0,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Flexible(
-                    flex: 5,
-                    child: SizedBox(width: 25.0),
-                  ),
-                  Flexible(
-                    flex: 14,
-                    child: Text(
-                      sectionTitles[0],
-                      style: GoogleFonts.roboto(
-                        color: Colors.white,
-                        fontSize: 30.0,
-                      ),
-                    ),
-                  ),
-                  Flexible(
-                    flex: 5,
-                    child: IconButton(
-                      onPressed: () {
-                        showPopup(0);
-                      },
-                      icon: Icon(
-                        Icons.add_circle_outline,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-
-    final topRight = Container(
-      decoration: BoxDecoration(
-        color: Color(0xff243341),
-        borderRadius: BorderRadius.circular(5.0),
-      ),
-      width: screenSize.width / 2.3,
-      height: screenSize.height / 2.6,
-      child: Stack(
-        children: [
-          StreamBuilder(
-            stream: FirebaseFirestore.instance
-                .collection('Users')
-                .doc(FirebaseAuth.instance.currentUser.uid)
-                .collection('Strategy')
-                .doc(sections[1])
-                .collection("Backlog")
-                .snapshots(),
-            builder:
-                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (!snapshot.hasData) {
-                return Center(
-                  child: CircularProgressIndicator(),
+                    );
+                  }).toList(),
                 );
-              }
-
-              return ListView(
-                children: snapshot.data.docs.map((document) {
-                  return Center(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 10.0,
-                      ),
-                      child: Container(
-                        width: screenSize.width / 2.5,
-                        decoration: BoxDecoration(
-                          color: Color(0xff15202b),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.all(5.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "@" + handle,
-                                style: GoogleFonts.roboto(
-                                  color: Color(0xff45535e),
-                                  fontSize: 15.0,
-                                ),
-                              ),
-                              Text(
-                                document['Tweet'],
-                                maxLines: 5,
-                                style: GoogleFonts.roboto(
-                                  color: Colors.white,
-                                  fontSize: 20.0,
-                                ),
-                              ),
-                            ],
-                          ),
+              },
+            ),
+            Container(
+              decoration: BoxDecoration(
+                color: Color(0xff15202b),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(5.0),
+                  topRight: Radius.circular(5.0),
+                ),
+              ),
+              child: Padding(
+                padding: EdgeInsets.only(
+                  top: 5.0,
+                  bottom: 5.0,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(
+                      flex: 5,
+                      child: SizedBox(width: 25.0),
+                    ),
+                    Flexible(
+                      flex: 14,
+                      child: Text(
+                        sectionTitles[section],
+                        style: GoogleFonts.roboto(
+                          color: Colors.white,
+                          fontSize: 30.0,
                         ),
                       ),
                     ),
-                  );
-                }).toList(),
-              );
-            },
-          ),
-          Container(
-            decoration: BoxDecoration(
-              color: Color(0xff15202b),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(5.0),
-                topRight: Radius.circular(5.0),
-              ),
-            ),
-            child: Padding(
-              padding: EdgeInsets.only(
-                top: 5.0,
-                bottom: 5.0,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Flexible(
-                    flex: 5,
-                    child: SizedBox(width: 25.0),
-                  ),
-                  Flexible(
-                    flex: 14,
-                    child: Text(
-                      sectionTitles[1],
-                      style: GoogleFonts.roboto(
-                        color: Colors.white,
-                        fontSize: 30.0,
-                      ),
-                    ),
-                  ),
-                  Flexible(
-                    flex: 5,
-                    child: IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.add_circle_outline,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-
-    final bottomLeft = Container(
-      decoration: BoxDecoration(
-        color: Color(0xff243341),
-        borderRadius: BorderRadius.circular(5.0),
-      ),
-      width: screenSize.width / 2.3,
-      height: screenSize.height / 2.6,
-      child: Stack(
-        children: [
-          StreamBuilder(
-            stream: FirebaseFirestore.instance
-                .collection('Users')
-                .doc(FirebaseAuth.instance.currentUser.uid)
-                .collection('Strategy')
-                .doc(sections[2])
-                .collection("Backlog")
-                .snapshots(),
-            builder:
-                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (!snapshot.hasData) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-
-              return ListView(
-                children: snapshot.data.docs.map((document) {
-                  return Center(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 10.0,
-                      ),
-                      child: Container(
-                        width: screenSize.width / 2.5,
-                        decoration: BoxDecoration(
-                          color: Color(0xff15202b),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.all(5.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "@" + handle,
-                                style: GoogleFonts.roboto(
-                                  color: Color(0xff45535e),
-                                  fontSize: 15.0,
-                                ),
-                              ),
-                              Text(
-                                document['Tweet'],
-                                maxLines: 5,
-                                style: GoogleFonts.roboto(
-                                  color: Colors.white,
-                                  fontSize: 20.0,
-                                ),
-                              ),
-                            ],
-                          ),
+                    Flexible(
+                      flex: 5,
+                      child: IconButton(
+                        onPressed: () {
+                          showPopup(section);
+                        },
+                        icon: Icon(
+                          Icons.add_circle_outline,
+                          color: Colors.white,
                         ),
                       ),
                     ),
-                  );
-                }).toList(),
-              );
-            },
-          ),
-          Container(
-            decoration: BoxDecoration(
-              color: Color(0xff15202b),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(5.0),
-                topRight: Radius.circular(5.0),
+                  ],
+                ),
               ),
             ),
-            child: Padding(
-              padding: EdgeInsets.only(
-                top: 5.0,
-                bottom: 5.0,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Flexible(
-                    flex: 5,
-                    child: SizedBox(width: 25.0),
-                  ),
-                  Flexible(
-                    flex: 14,
-                    child: Text(
-                      sectionTitles[2],
-                      style: GoogleFonts.roboto(
-                        color: Colors.white,
-                        fontSize: 30.0,
-                      ),
-                    ),
-                  ),
-                  Flexible(
-                    flex: 5,
-                    child: IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.add_circle_outline,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-
-    final bottomRight = Container(
-      decoration: BoxDecoration(
-        color: Color(0xff243341),
-        borderRadius: BorderRadius.circular(5.0),
-      ),
-      width: screenSize.width / 2.3,
-      height: screenSize.height / 2.6,
-      child: Stack(
-        children: [
-          StreamBuilder(
-            stream: FirebaseFirestore.instance
-                .collection('Users')
-                .doc(FirebaseAuth.instance.currentUser.uid)
-                .collection('Strategy')
-                .doc(sections[3])
-                .collection("Backlog")
-                .snapshots(),
-            builder:
-                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (!snapshot.hasData) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-
-              return ListView(
-                children: snapshot.data.docs.map((document) {
-                  return Center(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 10.0,
-                      ),
-                      child: Container(
-                        width: screenSize.width / 2.5,
-                        decoration: BoxDecoration(
-                          color: Color(0xff15202b),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.all(5.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "@" + handle,
-                                style: GoogleFonts.roboto(
-                                  color: Color(0xff45535e),
-                                  fontSize: 15.0,
-                                ),
-                              ),
-                              Text(
-                                document['Tweet'],
-                                maxLines: 5,
-                                style: GoogleFonts.roboto(
-                                  color: Colors.white,
-                                  fontSize: 20.0,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                }).toList(),
-              );
-            },
-          ),
-          Container(
-            decoration: BoxDecoration(
-              color: Color(0xff15202b),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(5.0),
-                topRight: Radius.circular(5.0),
-              ),
-            ),
-            child: Padding(
-              padding: EdgeInsets.only(
-                top: 5.0,
-                bottom: 5.0,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Flexible(
-                    flex: 5,
-                    child: SizedBox(width: 25.0),
-                  ),
-                  Flexible(
-                    flex: 14,
-                    child: Text(
-                      sectionTitles[3],
-                      style: GoogleFonts.roboto(
-                        color: Colors.white,
-                        fontSize: 30.0,
-                      ),
-                    ),
-                  ),
-                  Flexible(
-                    flex: 5,
-                    child: IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.add_circle_outline,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    }
 
     final profileData = Column(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            topLeft,
+            gridBox(0),
             SizedBox(
               width: screenSize.width / 40,
             ),
-            topRight,
+            gridBox(1),
           ],
         ),
         SizedBox(
@@ -660,11 +317,11 @@ class _HomeInfoState extends State<HomeInfo> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            bottomLeft,
+            gridBox(2),
             SizedBox(
               width: screenSize.width / 40,
             ),
-            bottomRight,
+            gridBox(3),
           ],
         ),
       ],
