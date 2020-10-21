@@ -18,7 +18,7 @@ class AuthPage extends StatefulWidget {
 class _AuthPageState extends State<AuthPage> {
   ScrollController _scrollController;
   double _scrollPosition = 0;
-  double _opacity = 0;
+  double opacity = 0;
 
   _scrollListener() {
     setState(() {
@@ -43,7 +43,7 @@ class _AuthPageState extends State<AuthPage> {
     }
 
     var screenSize = MediaQuery.of(context).size;
-    _opacity = _scrollPosition < screenSize.height * 0.40
+    opacity = _scrollPosition < screenSize.height * 0.40
         ? _scrollPosition / (screenSize.height * 0.40)
         : 1;
 

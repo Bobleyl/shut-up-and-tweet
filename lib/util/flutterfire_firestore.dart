@@ -29,41 +29,71 @@ Future<void> setUpGrid() async {
   await addGrid(uid, "Networking");
 }
 
+Future<void> updateTweetCount() async {
+  String uid = FirebaseAuth.instance.currentUser.uid;
+  DocumentReference documentReference =
+      FirebaseFirestore.instance.collection('Users').doc(uid);
+  FirebaseFirestore.instance.runTransaction((transaction) async {
+    DocumentSnapshot snapshot = await transaction.get(documentReference);
+    if (!snapshot.exists) {
+      documentReference.set({'Tweet Count': 1});
+    }
+    int newAmount = snapshot.data()['Tweet Count'] + 1;
+    transaction.update(documentReference, {'Tweet Count': newAmount});
+  });
+}
+
 // ignore: missing_return
 Future<int> getTweetCount(String uid) async {
-  FirebaseFirestore.instance
-      .collection('Users')
-      .doc(uid)
-      .get()
-      .then((DocumentSnapshot documentSnapshot) {
-    if (documentSnapshot.exists) {
-      return documentSnapshot.data()['Tweet Count'];
-    }
-  });
+  DocumentSnapshot snapshot =
+      await FirebaseFirestore.instance.collection('Users').doc(uid).get();
+  return snapshot.data()['Tweet Count'];
 }
 
 Future<void> addTweet(String tweet, String section) async {
   String uid = FirebaseAuth.instance.currentUser.uid;
   int count = await getTweetCount(uid);
+  print("Starting adding method: $count");
   await FirebaseFirestore.instance
       .collection('Users')
       .doc(uid)
       .collection("Strategy")
-      .where("Name", isEqualTo: section)
-      .get()
-      .then((QuerySnapshot querySnapshot) => {
-            FirebaseFirestore.instance
-                .collection('Users')
-                .doc(uid)
-                .collection("Strategy")
-                .doc(querySnapshot.docs[0].id)
-                .collection("Backlog")
-                .doc((count + 1).toString())
-                .set({
-              "Tweet": tweet,
-              "Date": DateTime.now().toIso8601String(),
-            })
-          });
+      .doc(section)
+      .collection("Backlog")
+      .doc((count + 1).toString())
+      .set({
+    "Tweet": tweet,
+    "Date": DateTime.now().toIso8601String(),
+  });
+  await updateTweetCount();
+}
+
+Future<void> deleteTweet(String id, String section) async {
+  String uid = FirebaseAuth.instance.currentUser.uid;
+  await FirebaseFirestore.instance
+      .collection('Users')
+      .doc(uid)
+      .collection("Strategy")
+      .doc(section)
+      .collection('Backlog')
+      .doc(id)
+      .delete();
+}
+
+Future<void> archiveTweet(String tweetId, String tweet, String section) async {
+  String uid = FirebaseAuth.instance.currentUser.uid;
+  await FirebaseFirestore.instance
+      .collection('Users')
+      .doc(uid)
+      .collection("Strategy")
+      .doc(section)
+      .collection("Archive")
+      .doc(tweetId)
+      .set({
+    "Tweet": tweet,
+    "Date": DateTime.now().toIso8601String(),
+  });
+  await deleteTweet(tweetId, section);
 }
 
 Future<List<String>> getStrategySectionIds() async {

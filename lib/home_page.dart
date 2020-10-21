@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 import 'util/responsive_widget.dart';
 import 'util/flutterfire_firestore.dart';
@@ -111,7 +112,8 @@ class _HomeInfoState extends State<HomeInfo> {
     var screenSize = MediaQuery.of(context).size;
 
     AwesomeDialog showPopup(int section) {
-      return AwesomeDialog(
+      AwesomeDialog dialog;
+      dialog = AwesomeDialog(
         context: context,
         width: screenSize.width / 2,
         animType: AnimType.SCALE,
@@ -125,7 +127,7 @@ class _HomeInfoState extends State<HomeInfo> {
                 ),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Color(0xff243341),
+                    color: Color(0xff45535e),
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   child: TextFormField(
@@ -140,19 +142,19 @@ class _HomeInfoState extends State<HomeInfo> {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8.0),
                         borderSide: BorderSide(
-                          color: Color(0xff243341),
+                          color: Color(0xff45535e),
                         ),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8.0),
                         borderSide: BorderSide(
-                          color: Color(0xff243341),
+                          color: Color(0xff45535e),
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8.0),
                         borderSide: BorderSide(
-                          color: Color(0xff243341),
+                          color: Color(0xff45535e),
                         ),
                       ),
                     ),
@@ -164,10 +166,32 @@ class _HomeInfoState extends State<HomeInfo> {
                   ),
                 ),
               ),
-              Container(
-                child: MaterialButton(
-                  onPressed: () {},
-                  child: Text("Add Tweet"),
+              Padding(
+                padding: EdgeInsets.only(top: 5.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5.0),
+                    color: Color(0xff243341),
+                  ),
+                  child: MaterialButton(
+                    onPressed: () async {
+                      print("Hit");
+                      await addTweet(tweetController.text, sections[section]);
+                      tweetController.text = "";
+                      dialog.dissmiss();
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 15.0) +
+                          EdgeInsets.symmetric(vertical: 5.0),
+                      child: Text(
+                        "Add Tweet",
+                        style: GoogleFonts.roboto(
+                          color: Colors.white,
+                          fontSize: 20.0,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -176,6 +200,7 @@ class _HomeInfoState extends State<HomeInfo> {
         title: 'This is Ignored',
         desc: 'This is also Ignored',
       )..show();
+      return dialog;
     }
 
     Widget gridBox(int section) {
@@ -195,6 +220,7 @@ class _HomeInfoState extends State<HomeInfo> {
                   .collection('Strategy')
                   .doc(sections[section])
                   .collection("Backlog")
+                  .orderBy("Date", descending: false)
                   .snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -211,34 +237,60 @@ class _HomeInfoState extends State<HomeInfo> {
                         padding: EdgeInsets.symmetric(
                           vertical: 10.0,
                         ),
-                        child: Container(
-                          width: screenSize.width / 2.5,
-                          decoration: BoxDecoration(
-                            color: Color(0xff15202b),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.all(5.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "@" + handle,
-                                  style: GoogleFonts.roboto(
-                                    color: Color(0xff45535e),
-                                    fontSize: 15.0,
+                        child: Slidable(
+                          actionPane: SlidableDrawerActionPane(),
+                          actionExtentRatio: 0.25,
+                          child: Container(
+                            width: screenSize.width / 2.5,
+                            decoration: BoxDecoration(
+                              color: Color(0xff15202b),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(5.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "@" + handle,
+                                    style: GoogleFonts.roboto(
+                                      color: Color(0xff45535e),
+                                      fontSize: 15.0,
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  document['Tweet'],
-                                  maxLines: 5,
-                                  style: GoogleFonts.roboto(
-                                    color: Colors.white,
-                                    fontSize: 20.0,
+                                  Text(
+                                    document['Tweet'],
+                                    maxLines: 5,
+                                    style: GoogleFonts.roboto(
+                                      color: Colors.white,
+                                      fontSize: 20.0,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
+                          actions: <Widget>[
+                            IconSlideAction(
+                              caption: 'Archive',
+                              color: Colors.blue,
+                              icon: Icons.archive,
+                              onTap: () async {
+                                await archiveTweet(document.id,
+                                    document['Tweet'], sections[section]);
+                              },
+                            ),
+                          ],
+                          secondaryActions: <Widget>[
+                            IconSlideAction(
+                              caption: 'Delete',
+                              color: Colors.red,
+                              icon: Icons.delete,
+                              onTap: () async {
+                                await deleteTweet(
+                                    document.id, sections[section]);
+                              },
+                            ),
+                          ],
                         ),
                       ),
                     );
