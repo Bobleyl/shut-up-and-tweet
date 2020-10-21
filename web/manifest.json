@@ -1,11 +1,11 @@
 {
-    "name": "shut_up_and_tweet",
-    "short_name": "shut_up_and_tweet",
+    "name": "Shut Up and Tweet",
+    "short_name": "Shut Up and Tweet",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Curate and Manage Your Twitter Strategy",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

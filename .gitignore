@@ -9,6 +9,11 @@
 .history
 .svn/
 
+.firebase
+.firebaserc
+firebase.json
+web/index.html
+
 # IntelliJ related
 *.iml
 *.ipr
