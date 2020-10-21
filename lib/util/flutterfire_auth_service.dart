@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import 'flutterfire_firestore.dart';
+
 class FlutterFireAuthService {
   final FirebaseAuth _firebaseAuth;
 
@@ -43,6 +45,8 @@ class FlutterFireAuthService {
       await _firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
       Navigator.of(context).pushNamed('/home');
+      await addUser("");
+      await setUpGrid();
       return "Success";
     } on FirebaseAuthException catch (e) {
       return e.message;

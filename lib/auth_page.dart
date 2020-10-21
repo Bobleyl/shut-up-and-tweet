@@ -87,13 +87,13 @@ class _HomeInfoState extends State<HomeInfo> {
     final profileData = Column(
       children: [
         SizedBox(
-          height: screenSize.height / 10,
+          height: screenSize.height / 3.7,
         ),
         Container(
-          width: screenSize.width / 2,
+          width: screenSize.width / 2.6,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15.0),
-            color: Colors.white,
+            color: Color(0xff15202b),
           ),
           child: Column(
             children: [
@@ -108,14 +108,24 @@ class _HomeInfoState extends State<HomeInfo> {
                   controller: _emailController,
                   decoration: InputDecoration(
                     hintText: "something@email.com",
-                    hintStyle: GoogleFonts.lato(
-                      color: Colors.black,
+                    hintStyle: GoogleFonts.roboto(
+                      color: Colors.white,
                     ),
                     labelText: "Email",
-                    labelStyle: GoogleFonts.lato(
-                      color: Colors.black,
+                    labelStyle: GoogleFonts.roboto(
+                      color: Colors.white,
+                    ),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
                     ),
                   ),
+                  style: GoogleFonts.roboto(
+                    color: Colors.white,
+                  ),
+                  cursorColor: Colors.white,
                 ),
               ),
               SizedBox(
@@ -130,14 +140,24 @@ class _HomeInfoState extends State<HomeInfo> {
                   obscureText: true,
                   decoration: InputDecoration(
                     hintText: "password",
-                    hintStyle: GoogleFonts.lato(
-                      color: Colors.black,
+                    hintStyle: GoogleFonts.roboto(
+                      color: Colors.white,
                     ),
                     labelText: "Password",
-                    labelStyle: GoogleFonts.lato(
-                      color: Colors.black,
+                    labelStyle: GoogleFonts.roboto(
+                      color: Colors.white,
+                    ),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
                     ),
                   ),
+                  style: GoogleFonts.roboto(
+                    color: Colors.white,
+                  ),
+                  cursorColor: Colors.white,
                 ),
               ),
               SizedBox(
@@ -147,7 +167,7 @@ class _HomeInfoState extends State<HomeInfo> {
                 width: 200,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: Colors.black,
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 child: MaterialButton(
@@ -160,9 +180,10 @@ class _HomeInfoState extends State<HomeInfo> {
                   },
                   child: Text(
                     "Sign In",
-                    style: GoogleFonts.lato(
-                      color: Colors.white,
+                    style: GoogleFonts.roboto(
+                      color: Colors.black,
                       fontSize: 20,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
@@ -174,7 +195,7 @@ class _HomeInfoState extends State<HomeInfo> {
                 width: 200,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: Colors.black,
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 child: MaterialButton(
@@ -187,9 +208,10 @@ class _HomeInfoState extends State<HomeInfo> {
                   },
                   child: Text(
                     "Sign Up",
-                    style: GoogleFonts.lato(
-                      color: Colors.white,
+                    style: GoogleFonts.roboto(
+                      color: Colors.black,
                       fontSize: 20,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
@@ -201,7 +223,7 @@ class _HomeInfoState extends State<HomeInfo> {
           ),
         ),
         SizedBox(
-          height: screenSize.height / 10,
+          height: screenSize.height / 3.7,
         ),
       ],
     );
