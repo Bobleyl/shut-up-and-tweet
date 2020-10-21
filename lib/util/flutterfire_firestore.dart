@@ -29,6 +29,7 @@ Future<void> setUpGrid() async {
   await addGrid(uid, "Networking");
 }
 
+// ignore: missing_return
 Future<int> getTweetCount(String uid) async {
   FirebaseFirestore.instance
       .collection('Users')

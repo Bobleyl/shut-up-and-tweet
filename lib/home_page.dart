@@ -6,8 +6,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'util/responsive_widget.dart';
 import 'util/flutterfire_firestore.dart';
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html' as html;
 
 import 'widgets/widgets.dart';
 
