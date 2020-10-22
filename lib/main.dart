@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shut_up_and_tweet/ui/archived.dart';
 import 'package:shut_up_and_tweet/ui/auth_page.dart';
 import 'package:shut_up_and_tweet/util/flutterfire_auth_service.dart';
 import 'configure_nonweb.dart' if (dart.library.html) 'configure_web.dart';
@@ -31,13 +32,14 @@ class MyApp extends StatelessWidget {
         )
       ],
       child: MaterialApp(
-        title: 'Bleyl Dev',
+        title: 'Shut Up and Tweet',
         theme: ThemeData(
           bottomAppBarColor: Color(0xff8c53ff),
         ),
         initialRoute: '/',
         routes: {
           '/home': (context) => HomePage(),
+          '/archived': (context) => ArchivedPage(),
         },
         debugShowCheckedModeBanner: false,
         home: AuthPage(),

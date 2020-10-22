@@ -3,12 +3,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 Future<void> addUser(String twitterHandle) async {
   String uid = FirebaseAuth.instance.currentUser.uid;
-  String date = DateTime.now().toIso8601String();
+  DateTime now = new DateTime.now();
+  String date = DateTime(now.year, now.month, now.day).toString();
+  date = date.split(" ")[0];
   FirebaseFirestore.instance.collection('Users').doc(uid).set({
     "UID": uid,
     "Creation Date": date,
     "Twitter Handle": twitterHandle,
-    "Tweet Count": 0
+    "Tweet Count": 0,
+    "Last Check": date
   });
 }
 
@@ -134,4 +137,57 @@ Future<String> getHandle() async {
   } catch (e) {
     print(e.toString());
   }
+}
+
+Future<void> addItemToChecklist(String item) async {
+  String uid = FirebaseAuth.instance.currentUser.uid;
+  FirebaseFirestore.instance
+      .collection('Users')
+      .doc(uid)
+      .collection('Checklist')
+      .add({"Item": item, "Done": false});
+}
+
+Future<void> sameDayCheck() async {
+  String uid = FirebaseAuth.instance.currentUser.uid;
+  DocumentSnapshot docSnapshot =
+      await FirebaseFirestore.instance.collection('Users').doc(uid).get();
+  String lastCheck = docSnapshot.data()['Last Check'];
+  DateTime now = new DateTime.now();
+  String date = DateTime(now.year, now.month, now.day).toString();
+  date = date.split(" ")[0];
+  if (lastCheck != date) {
+    FirebaseFirestore.instance
+        .collection('Users')
+        .doc(uid)
+        .collection('Checklist')
+        .get()
+        .then((QuerySnapshot querySnapshot) => {
+              querySnapshot.docs.forEach((doc) {
+                FirebaseFirestore.instance
+                    .collection('Users')
+                    .doc(uid)
+                    .collection('Checklist')
+                    .doc(doc.id)
+                    .update({"Done": false});
+              })
+            });
+    FirebaseFirestore.instance
+        .collection('Users')
+        .doc(uid)
+        .update({"Last Check": date});
+  } else {
+    return;
+  }
+}
+
+Future<void> checkItem(String id, bool value) async {
+  String uid = FirebaseAuth.instance.currentUser.uid;
+
+  FirebaseFirestore.instance
+      .collection('Users')
+      .doc(uid)
+      .collection('Checklist')
+      .doc(id)
+      .update({"Done": value});
 }

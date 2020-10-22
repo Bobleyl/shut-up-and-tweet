@@ -29,6 +29,7 @@ class FlutterFireAuthService {
           email: email, password: password);
       print("Signed In");
       Navigator.of(context).pushNamed('/home');
+      await sameDayCheck();
       return "Success";
     } on FirebaseAuthException catch (e) {
       return e.message;

@@ -39,42 +39,10 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
               ),
               InkWell(
                 onTap: () {
-                  Navigator.of(context).pushNamed('/blog');
+                  Navigator.of(context).pushNamed('/archived');
                 },
                 child: Text(
-                  'Blog',
-                  style: TextStyle(color: Colors.white, fontSize: 22),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
-                child: Divider(
-                  color: Colors.white,
-                  thickness: 2,
-                ),
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.of(context).pushNamed('/course');
-                },
-                child: Text(
-                  'Courses',
-                  style: TextStyle(color: Colors.white, fontSize: 22),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
-                child: Divider(
-                  color: Colors.white,
-                  thickness: 2,
-                ),
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.of(context).pushNamed('/contact');
-                },
-                child: Text(
-                  'Contact',
+                  'Archived',
                   style: TextStyle(color: Colors.white, fontSize: 22),
                 ),
               ),

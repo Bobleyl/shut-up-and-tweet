@@ -49,21 +49,21 @@ class _TopBarContentsState extends State<TopBarContents> {
                       onHover: (value) {
                         setState(() {
                           value
-                              ? _isHovering[3] = true
-                              : _isHovering[3] = false;
+                              ? _isHovering[0] = true
+                              : _isHovering[0] = false;
                         });
                       },
                       onTap: () {
-                        Navigator.of(context).pushNamed('/contact');
+                        Navigator.of(context).pushNamed('/home');
                       },
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            'Archived',
+                            'Home',
                             style: GoogleFonts.lato(
                               fontSize: 25.0,
-                              color: _isHovering[3]
+                              color: _isHovering[0]
                                   ? Color(0xff8c53ff)
                                   : Colors.white,
                             ),
@@ -73,7 +73,46 @@ class _TopBarContentsState extends State<TopBarContents> {
                             maintainAnimation: true,
                             maintainState: true,
                             maintainSize: true,
-                            visible: _isHovering[3],
+                            visible: _isHovering[0],
+                            child: Container(
+                              height: 2,
+                              width: 20,
+                              color: Color(0xff8c53ff),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: 15),
+                    InkWell(
+                      onHover: (value) {
+                        setState(() {
+                          value
+                              ? _isHovering[1] = true
+                              : _isHovering[1] = false;
+                        });
+                      },
+                      onTap: () {
+                        Navigator.of(context).pushNamed('/archived');
+                      },
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Archived',
+                            style: GoogleFonts.lato(
+                              fontSize: 25.0,
+                              color: _isHovering[1]
+                                  ? Color(0xff8c53ff)
+                                  : Colors.white,
+                            ),
+                          ),
+                          SizedBox(height: 5),
+                          Visibility(
+                            maintainAnimation: true,
+                            maintainState: true,
+                            maintainSize: true,
+                            visible: _isHovering[1],
                             child: Container(
                               height: 2,
                               width: 20,
