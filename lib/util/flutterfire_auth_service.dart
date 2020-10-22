@@ -40,12 +40,15 @@ class FlutterFireAuthService {
   /// use your own custom class that would take the exception and return better
   /// error messages. That way you can throw, return or whatever you prefer with that instead.
   Future<String> signUp(
-      {String email, String password, BuildContext context}) async {
+      {String email,
+      String password,
+      String twitterHandle,
+      BuildContext context}) async {
     try {
       await _firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
       Navigator.of(context).pushNamed('/home');
-      await addUser("");
+      await addUser(twitterHandle);
       await setUpGrid();
       return "Success";
     } on FirebaseAuthException catch (e) {

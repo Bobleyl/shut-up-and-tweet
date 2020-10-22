@@ -78,21 +78,32 @@ class HomeInfo extends StatefulWidget {
   _HomeInfoState createState() => _HomeInfoState();
 }
 
-class _HomeInfoState extends State<HomeInfo> {
+class _HomeInfoState extends State<HomeInfo> with TickerProviderStateMixin {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+  TextEditingController _handleController = TextEditingController();
+  TabController tabController;
+  bool signIn = true;
+
+  @override
+  void initState() {
+    super.initState();
+    tabController = new TabController(length: 2, vsync: this);
+  }
+
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
-    final profileData = Column(
-      children: [
-        SizedBox(
-          height: screenSize.height / 3.7,
-        ),
-        Container(
+
+    tabs() {
+      if (signIn == true) {
+        return Container(
           width: screenSize.width / 2.6,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15.0),
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(15.0),
+              bottomRight: Radius.circular(15.0),
+            ),
             color: Color(0xff15202b),
           ),
           child: Column(
@@ -191,6 +202,119 @@ class _HomeInfoState extends State<HomeInfo> {
               SizedBox(
                 height: screenSize.height / 40,
               ),
+            ],
+          ),
+        );
+      } else {
+        return Container(
+          width: screenSize.width / 2.6,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(15.0),
+              bottomRight: Radius.circular(15.0),
+            ),
+            color: Color(0xff15202b),
+          ),
+          child: Column(
+            children: [
+              SizedBox(
+                height: screenSize.height / 40,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 50,
+                ),
+                child: TextFormField(
+                  controller: _emailController,
+                  decoration: InputDecoration(
+                    hintText: "something@email.com",
+                    hintStyle: GoogleFonts.roboto(
+                      color: Colors.white,
+                    ),
+                    labelText: "Email",
+                    labelStyle: GoogleFonts.roboto(
+                      color: Colors.white,
+                    ),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                    ),
+                  ),
+                  style: GoogleFonts.roboto(
+                    color: Colors.white,
+                  ),
+                  cursorColor: Colors.white,
+                ),
+              ),
+              SizedBox(
+                height: screenSize.height / 40,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 50,
+                ),
+                child: TextFormField(
+                  controller: _passwordController,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    hintText: "password",
+                    hintStyle: GoogleFonts.roboto(
+                      color: Colors.white,
+                    ),
+                    labelText: "Password",
+                    labelStyle: GoogleFonts.roboto(
+                      color: Colors.white,
+                    ),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                    ),
+                  ),
+                  style: GoogleFonts.roboto(
+                    color: Colors.white,
+                  ),
+                  cursorColor: Colors.white,
+                ),
+              ),
+              SizedBox(
+                height: screenSize.height / 40,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 50,
+                ),
+                child: TextFormField(
+                  controller: _handleController,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    hintText: "@twitterhandle",
+                    hintStyle: GoogleFonts.roboto(
+                      color: Colors.white,
+                    ),
+                    labelText: "Twitter Handle",
+                    labelStyle: GoogleFonts.roboto(
+                      color: Colors.white,
+                    ),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                    ),
+                  ),
+                  style: GoogleFonts.roboto(
+                    color: Colors.white,
+                  ),
+                  cursorColor: Colors.white,
+                ),
+              ),
+              SizedBox(
+                height: screenSize.height / 40,
+              ),
               Container(
                 width: 200,
                 height: 40,
@@ -203,6 +327,7 @@ class _HomeInfoState extends State<HomeInfo> {
                     context.read<FlutterFireAuthService>().signUp(
                           email: _emailController.text.trim(),
                           password: _passwordController.text.trim(),
+                          twitterHandle: _handleController.text.trim(),
                           context: context,
                         );
                   },
@@ -221,7 +346,113 @@ class _HomeInfoState extends State<HomeInfo> {
               ),
             ],
           ),
+        );
+      }
+    }
+
+    Color signInColor() {
+      if (signIn) {
+        return Color(0xff15202b);
+      } else {
+        return Color(0xff45535e);
+      }
+    }
+
+    Color signUpColor() {
+      if (signIn) {
+        return Color(0xff45535e);
+      } else {
+        return Color(0xff15202b);
+      }
+    }
+
+    Color signUpBoder() {
+      if (signIn) {
+        return Color(0xff45535e);
+      } else {
+        return Colors.white;
+      }
+    }
+
+    Color signInBorder() {
+      if (!signIn) {
+        return Color(0xff45535e);
+      } else {
+        return Colors.white;
+      }
+    }
+
+    final profileData = Column(
+      children: [
+        SizedBox(
+          height: screenSize.height / 3.7,
         ),
+        Container(
+          width: screenSize.width / 2.6,
+          child: Row(
+            children: [
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: signInColor(),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(15.0),
+                    ),
+                    border: Border.all(color: signInBorder()),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(5.0),
+                    child: MaterialButton(
+                      onPressed: () {
+                        setState(() {
+                          signIn = true;
+                        });
+                      },
+                      child: Text(
+                        "Sign In",
+                        style: GoogleFonts.roboto(
+                          color: Colors.white,
+                          fontSize: 20,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: signUpColor(),
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(15.0),
+                    ),
+                    border: Border.all(color: signUpBoder()),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(5.0),
+                    child: MaterialButton(
+                      onPressed: () {
+                        setState(() {
+                          signIn = false;
+                        });
+                      },
+                      child: Text(
+                        "Sign Up",
+                        style: GoogleFonts.roboto(
+                          color: Colors.white,
+                          fontSize: 20,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        tabs(),
         SizedBox(
           height: screenSize.height / 3.7,
         ),
