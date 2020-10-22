@@ -1,12 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shut_up_and_tweet/home_page.dart';
+import 'package:shut_up_and_tweet/ui/home_page.dart';
+import 'package:shut_up_and_tweet/ui/theme/colors.dart';
 import 'package:shut_up_and_tweet/util/flutterfire_auth_service.dart';
-import 'util/responsive_widget.dart';
+import '../util/responsive_widget.dart';
 import 'package:provider/provider.dart';
 
-import 'widgets/widgets.dart';
+import '../widgets/widgets.dart';
 
 class AuthPage extends StatefulWidget {
   AuthPage({Key key}) : super(key: key);
@@ -78,18 +79,11 @@ class HomeInfo extends StatefulWidget {
   _HomeInfoState createState() => _HomeInfoState();
 }
 
-class _HomeInfoState extends State<HomeInfo> with TickerProviderStateMixin {
+class _HomeInfoState extends State<HomeInfo> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _handleController = TextEditingController();
-  TabController tabController;
   bool signIn = true;
-
-  @override
-  void initState() {
-    super.initState();
-    tabController = new TabController(length: 2, vsync: this);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -350,38 +344,6 @@ class _HomeInfoState extends State<HomeInfo> with TickerProviderStateMixin {
       }
     }
 
-    Color signInColor() {
-      if (signIn) {
-        return Color(0xff15202b);
-      } else {
-        return Color(0xff45535e);
-      }
-    }
-
-    Color signUpColor() {
-      if (signIn) {
-        return Color(0xff45535e);
-      } else {
-        return Color(0xff15202b);
-      }
-    }
-
-    Color signUpBoder() {
-      if (signIn) {
-        return Color(0xff45535e);
-      } else {
-        return Colors.white;
-      }
-    }
-
-    Color signInBorder() {
-      if (!signIn) {
-        return Color(0xff45535e);
-      } else {
-        return Colors.white;
-      }
-    }
-
     final profileData = Column(
       children: [
         SizedBox(
@@ -394,11 +356,11 @@ class _HomeInfoState extends State<HomeInfo> with TickerProviderStateMixin {
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: signInColor(),
+                    color: signInColor(signIn),
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(15.0),
                     ),
-                    border: Border.all(color: signInBorder()),
+                    border: Border.all(color: signInBorder(signIn)),
                   ),
                   child: Padding(
                     padding: EdgeInsets.all(5.0),
@@ -423,11 +385,11 @@ class _HomeInfoState extends State<HomeInfo> with TickerProviderStateMixin {
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: signUpColor(),
+                    color: signUpColor(signIn),
                     borderRadius: BorderRadius.only(
                       topRight: Radius.circular(15.0),
                     ),
-                    border: Border.all(color: signUpBoder()),
+                    border: Border.all(color: signUpBoder(signIn)),
                   ),
                   child: Padding(
                     padding: EdgeInsets.all(5.0),

@@ -7,10 +7,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:clipboard/clipboard.dart';
 
-import 'util/responsive_widget.dart';
-import 'util/flutterfire_firestore.dart';
+import '../util/responsive_widget.dart';
+import '../util/flutterfire_firestore.dart';
 
-import 'widgets/widgets.dart';
+import '../widgets/widgets.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);

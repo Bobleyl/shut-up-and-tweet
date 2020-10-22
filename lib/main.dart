@@ -2,11 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shut_up_and_tweet/auth_page.dart';
+import 'package:shut_up_and_tweet/ui/auth_page.dart';
 import 'package:shut_up_and_tweet/util/flutterfire_auth_service.dart';
 import 'configure_nonweb.dart' if (dart.library.html) 'configure_web.dart';
 
-import 'home_page.dart';
+import 'ui/home_page.dart';
 
 void main() async {
   configureApp();
