@@ -20,3 +20,6 @@ The hope is that it will be a place where users can store their tweet ideas and 
 * As a user I can hook-up my twitter account and post directly from the app
 * As a user I can see how many characters I have left that I can add to my tweet
 * As a user I can tag people from twitter
+* As a user I can see a list of daily checklist items to complete
+* As a user I can see statistics on my Twitter follower count
+* As a user I can see statistics on my retweet and like counts
