@@ -1,9 +1,11 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:clipboard/clipboard.dart';
 
 import 'util/responsive_widget.dart';
 import 'util/flutterfire_firestore.dart';
@@ -111,6 +113,50 @@ class _HomeInfoState extends State<HomeInfo> {
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
 
+    void showCenterFlash({
+      FlashPosition position,
+      FlashStyle style,
+      Alignment alignment,
+      String message,
+    }) {
+      showFlash(
+        context: context,
+        duration: Duration(seconds: 3),
+        builder: (_, controller) {
+          return Flash(
+            controller: controller,
+            backgroundColor: Colors.black,
+            borderRadius: BorderRadius.circular(5.0),
+            borderColor: Colors.red,
+            position: position,
+            style: style,
+            alignment: alignment,
+            enableDrag: false,
+            onTap: () => controller.dismiss(),
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: DefaultTextStyle(
+                style: GoogleFonts.roboto(
+                  color: Colors.white,
+                ),
+                child: Text(
+                  message,
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    }
+
+    Color countColor(String word) {
+      if (word.length > 280) {
+        return Colors.red;
+      } else {
+        return Colors.black;
+      }
+    }
+
     AwesomeDialog showPopup(int section) {
       AwesomeDialog dialog;
       dialog = AwesomeDialog(
@@ -118,84 +164,123 @@ class _HomeInfoState extends State<HomeInfo> {
         width: screenSize.width / 2,
         animType: AnimType.SCALE,
         dialogType: DialogType.NO_HEADER,
-        body: Center(
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 30.0,
-                ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Color(0xff45535e),
-                    borderRadius: BorderRadius.circular(8.0),
+        body: StatefulBuilder(
+          builder: (context, setState) {
+            return Center(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 30.0,
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Color(0xff45535e),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            cursorColor: Colors.white,
+                            controller: tweetController,
+                            onChanged: (value) {
+                              setState(() {});
+                            },
+                            decoration: InputDecoration(
+                              hintText: "Enter Tweet Here",
+                              hintStyle: GoogleFonts.roboto(
+                                color: Colors.white,
+                                fontSize: 20.0,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                                borderSide: BorderSide(
+                                  color: Color(0xff45535e),
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                                borderSide: BorderSide(
+                                  color: Color(0xff45535e),
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                                borderSide: BorderSide(
+                                  color: Color(0xff45535e),
+                                ),
+                              ),
+                            ),
+                            style: GoogleFonts.roboto(
+                              color: Colors.white,
+                              fontSize: 20.0,
+                            ),
+                            maxLines: 5,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  right: 5.0,
+                                  bottom: 5.0,
+                                ),
+                                child: Text(
+                                  (280 - tweetController.text.length)
+                                      .toString(),
+                                  style: GoogleFonts.roboto(
+                                    fontWeight: FontWeight.bold,
+                                    color: countColor(
+                                      tweetController.text,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                  child: TextFormField(
-                    cursorColor: Colors.white,
-                    controller: tweetController,
-                    decoration: InputDecoration(
-                      hintText: "Enter Tweet Here",
-                      hintStyle: GoogleFonts.roboto(
-                        color: Colors.white,
-                        fontSize: 20.0,
+                  Padding(
+                    padding: EdgeInsets.only(top: 5.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5.0),
+                        color: Color(0xff243341),
                       ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                        borderSide: BorderSide(
-                          color: Color(0xff45535e),
-                        ),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                        borderSide: BorderSide(
-                          color: Color(0xff45535e),
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                        borderSide: BorderSide(
-                          color: Color(0xff45535e),
+                      child: MaterialButton(
+                        onPressed: () async {
+                          if (tweetController.text.length > 280) {
+                            showCenterFlash(
+                              alignment: Alignment.center,
+                              message: 'You need to shorten your tweet',
+                            );
+                          } else {
+                            await addTweet(
+                                tweetController.text, sections[section]);
+                            tweetController.text = "";
+                            dialog.dissmiss();
+                          }
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 15.0) +
+                              EdgeInsets.symmetric(vertical: 5.0),
+                          child: Text(
+                            "Add Tweet",
+                            style: GoogleFonts.roboto(
+                              color: Colors.white,
+                              fontSize: 20.0,
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                    style: GoogleFonts.roboto(
-                      color: Colors.white,
-                      fontSize: 20.0,
-                    ),
-                    maxLines: 5,
                   ),
-                ),
+                ],
               ),
-              Padding(
-                padding: EdgeInsets.only(top: 5.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5.0),
-                    color: Color(0xff243341),
-                  ),
-                  child: MaterialButton(
-                    onPressed: () async {
-                      print("Hit");
-                      await addTweet(tweetController.text, sections[section]);
-                      tweetController.text = "";
-                      dialog.dissmiss();
-                    },
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 15.0) +
-                          EdgeInsets.symmetric(vertical: 5.0),
-                      child: Text(
-                        "Add Tweet",
-                        style: GoogleFonts.roboto(
-                          color: Colors.white,
-                          fontSize: 20.0,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+            );
+          },
         ),
         title: 'This is Ignored',
         desc: 'This is also Ignored',
@@ -250,12 +335,33 @@ class _HomeInfoState extends State<HomeInfo> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    "@" + handle,
-                                    style: GoogleFonts.roboto(
-                                      color: Color(0xff45535e),
-                                      fontSize: 15.0,
-                                    ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "@" + handle,
+                                        style: GoogleFonts.roboto(
+                                          color: Color(0xff45535e),
+                                          fontSize: 15.0,
+                                        ),
+                                      ),
+                                      IconButton(
+                                        onPressed: () {
+                                          FlutterClipboard.copy(
+                                              document['Tweet']);
+                                          showCenterFlash(
+                                              position: FlashPosition.top,
+                                              style: FlashStyle.floating,
+                                              message: 'Copied Tweet');
+                                        },
+                                        icon: Icon(
+                                          Icons.copy,
+                                          color: Color(0xff45535e),
+                                          size: 18,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   Text(
                                     document['Tweet'],
