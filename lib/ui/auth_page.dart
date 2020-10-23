@@ -111,7 +111,7 @@ class _HomeInfoState extends State<HomeInfo> {
                     .twitterSignIn()
                     .then((credential) async {
                   await addUser(credential.additionalUserInfo.username);
-                  await setUpGrid();
+                  await sameDayCheck();
                 });
               },
               child: Padding(

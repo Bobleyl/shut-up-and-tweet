@@ -24,6 +24,7 @@ Future<void> addUser(String twitterHandle) async {
       "Tweet Count": 0,
       "Last Check": date
     });
+    await setUpGrid();
   }
 }
 
