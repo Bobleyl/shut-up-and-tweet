@@ -2,10 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shut_up_and_tweet/ui/home_page.dart';
-import 'package:shut_up_and_tweet/ui/theme/colors.dart';
 import 'package:shut_up_and_tweet/util/flutterfire_auth_service.dart';
+import 'package:shut_up_and_tweet/util/flutterfire_firestore.dart';
 import '../util/responsive_widget.dart';
 import 'package:provider/provider.dart';
+import '../util/my_flutter_app_icons.dart' as CustomIcons;
 
 import '../widgets/widgets.dart';
 
@@ -80,692 +81,89 @@ class HomeInfo extends StatefulWidget {
 }
 
 class _HomeInfoState extends State<HomeInfo> {
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-  TextEditingController _handleController = TextEditingController();
-  bool signIn = true;
-
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
 
-    tabs() {
-      if (signIn == true) {
-        return Container(
-          width: screenSize.width / 2.6,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(15.0),
-              bottomRight: Radius.circular(15.0),
-            ),
-            color: Color(0xff15202b),
-          ),
-          child: Column(
-            children: [
-              SizedBox(
-                height: screenSize.height / 40,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 50,
-                ),
-                child: TextFormField(
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                    hintText: "something@email.com",
-                    hintStyle: GoogleFonts.roboto(
-                      color: Colors.white,
-                    ),
-                    labelText: "Email",
-                    labelStyle: GoogleFonts.roboto(
-                      color: Colors.white,
-                    ),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                  ),
-                  style: GoogleFonts.roboto(
-                    color: Colors.white,
-                  ),
-                  cursorColor: Colors.white,
-                ),
-              ),
-              SizedBox(
-                height: screenSize.height / 40,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 50,
-                ),
-                child: TextFormField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    hintText: "password",
-                    hintStyle: GoogleFonts.roboto(
-                      color: Colors.white,
-                    ),
-                    labelText: "Password",
-                    labelStyle: GoogleFonts.roboto(
-                      color: Colors.white,
-                    ),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                  ),
-                  style: GoogleFonts.roboto(
-                    color: Colors.white,
-                  ),
-                  cursorColor: Colors.white,
-                ),
-              ),
-              SizedBox(
-                height: screenSize.height / 40,
-              ),
-              Container(
-                width: 200,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                child: MaterialButton(
-                  onPressed: () {
-                    context.read<FlutterFireAuthService>().signIn(
-                          email: _emailController.text.trim(),
-                          password: _passwordController.text.trim(),
-                          context: context,
-                        );
-                  },
-                  child: Text(
-                    "Sign In",
-                    style: GoogleFonts.roboto(
-                      color: Colors.black,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: screenSize.height / 40,
-              ),
-            ],
-          ),
-        );
-      } else {
-        return Container(
-          width: screenSize.width / 2.6,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(15.0),
-              bottomRight: Radius.circular(15.0),
-            ),
-            color: Color(0xff15202b),
-          ),
-          child: Column(
-            children: [
-              SizedBox(
-                height: screenSize.height / 40,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 50,
-                ),
-                child: TextFormField(
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                    hintText: "something@email.com",
-                    hintStyle: GoogleFonts.roboto(
-                      color: Colors.white,
-                    ),
-                    labelText: "Email",
-                    labelStyle: GoogleFonts.roboto(
-                      color: Colors.white,
-                    ),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                  ),
-                  style: GoogleFonts.roboto(
-                    color: Colors.white,
-                  ),
-                  cursorColor: Colors.white,
-                ),
-              ),
-              SizedBox(
-                height: screenSize.height / 40,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 50,
-                ),
-                child: TextFormField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    hintText: "password",
-                    hintStyle: GoogleFonts.roboto(
-                      color: Colors.white,
-                    ),
-                    labelText: "Password",
-                    labelStyle: GoogleFonts.roboto(
-                      color: Colors.white,
-                    ),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                  ),
-                  style: GoogleFonts.roboto(
-                    color: Colors.white,
-                  ),
-                  cursorColor: Colors.white,
-                ),
-              ),
-              SizedBox(
-                height: screenSize.height / 40,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 50,
-                ),
-                child: TextFormField(
-                  controller: _handleController,
-                  decoration: InputDecoration(
-                    hintText: "@twitterhandle",
-                    hintStyle: GoogleFonts.roboto(
-                      color: Colors.white,
-                    ),
-                    labelText: "Twitter Handle",
-                    labelStyle: GoogleFonts.roboto(
-                      color: Colors.white,
-                    ),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                  ),
-                  style: GoogleFonts.roboto(
-                    color: Colors.white,
-                  ),
-                  cursorColor: Colors.white,
-                ),
-              ),
-              SizedBox(
-                height: screenSize.height / 40,
-              ),
-              Container(
-                width: 200,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                child: MaterialButton(
-                  onPressed: () {
-                    context.read<FlutterFireAuthService>().signUp(
-                          email: _emailController.text.trim(),
-                          password: _passwordController.text.trim(),
-                          twitterHandle: _handleController.text.trim(),
-                          context: context,
-                        );
-                  },
-                  child: Text(
-                    "Sign Up",
-                    style: GoogleFonts.roboto(
-                      color: Colors.black,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: screenSize.height / 40,
-              ),
-            ],
-          ),
-        );
-      }
-    }
-
-    Widget tabsSmall() {
-      if (signIn == true) {
-        return Container(
-          width: screenSize.width / 1.2,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(15.0),
-              bottomRight: Radius.circular(15.0),
-            ),
-            color: Color(0xff15202b),
-          ),
-          child: Column(
-            children: [
-              SizedBox(
-                height: screenSize.height / 40,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 50,
-                ),
-                child: TextFormField(
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                    hintText: "something@email.com",
-                    hintStyle: GoogleFonts.roboto(
-                      color: Colors.white,
-                    ),
-                    labelText: "Email",
-                    labelStyle: GoogleFonts.roboto(
-                      color: Colors.white,
-                    ),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                  ),
-                  style: GoogleFonts.roboto(
-                    color: Colors.white,
-                  ),
-                  cursorColor: Colors.white,
-                ),
-              ),
-              SizedBox(
-                height: screenSize.height / 40,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 50,
-                ),
-                child: TextFormField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    hintText: "password",
-                    hintStyle: GoogleFonts.roboto(
-                      color: Colors.white,
-                    ),
-                    labelText: "Password",
-                    labelStyle: GoogleFonts.roboto(
-                      color: Colors.white,
-                    ),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                  ),
-                  style: GoogleFonts.roboto(
-                    color: Colors.white,
-                  ),
-                  cursorColor: Colors.white,
-                ),
-              ),
-              SizedBox(
-                height: screenSize.height / 40,
-              ),
-              Container(
-                width: 200,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                child: MaterialButton(
-                  onPressed: () {
-                    context.read<FlutterFireAuthService>().signIn(
-                          email: _emailController.text.trim(),
-                          password: _passwordController.text.trim(),
-                          context: context,
-                        );
-                  },
-                  child: Text(
-                    "Sign In",
-                    style: GoogleFonts.roboto(
-                      color: Colors.black,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: screenSize.height / 40,
-              ),
-            ],
-          ),
-        );
-      } else {
-        return Container(
-          width: screenSize.width / 1.2,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(15.0),
-              bottomRight: Radius.circular(15.0),
-            ),
-            color: Color(0xff15202b),
-          ),
-          child: Column(
-            children: [
-              SizedBox(
-                height: screenSize.height / 40,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 50,
-                ),
-                child: TextFormField(
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                    hintText: "something@email.com",
-                    hintStyle: GoogleFonts.roboto(
-                      color: Colors.white,
-                    ),
-                    labelText: "Email",
-                    labelStyle: GoogleFonts.roboto(
-                      color: Colors.white,
-                    ),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                  ),
-                  style: GoogleFonts.roboto(
-                    color: Colors.white,
-                  ),
-                  cursorColor: Colors.white,
-                ),
-              ),
-              SizedBox(
-                height: screenSize.height / 40,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 50,
-                ),
-                child: TextFormField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    hintText: "password",
-                    hintStyle: GoogleFonts.roboto(
-                      color: Colors.white,
-                    ),
-                    labelText: "Password",
-                    labelStyle: GoogleFonts.roboto(
-                      color: Colors.white,
-                    ),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                  ),
-                  style: GoogleFonts.roboto(
-                    color: Colors.white,
-                  ),
-                  cursorColor: Colors.white,
-                ),
-              ),
-              SizedBox(
-                height: screenSize.height / 40,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 50,
-                ),
-                child: TextFormField(
-                  controller: _handleController,
-                  decoration: InputDecoration(
-                    hintText: "@twitterhandle",
-                    hintStyle: GoogleFonts.roboto(
-                      color: Colors.white,
-                    ),
-                    labelText: "Twitter Handle",
-                    labelStyle: GoogleFonts.roboto(
-                      color: Colors.white,
-                    ),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                  ),
-                  style: GoogleFonts.roboto(
-                    color: Colors.white,
-                  ),
-                  cursorColor: Colors.white,
-                ),
-              ),
-              SizedBox(
-                height: screenSize.height / 40,
-              ),
-              Container(
-                width: 200,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                child: MaterialButton(
-                  onPressed: () {
-                    context.read<FlutterFireAuthService>().signUp(
-                          email: _emailController.text.trim(),
-                          password: _passwordController.text.trim(),
-                          twitterHandle: _handleController.text.trim(),
-                          context: context,
-                        );
-                  },
-                  child: Text(
-                    "Sign Up",
-                    style: GoogleFonts.roboto(
-                      color: Colors.black,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: screenSize.height / 40,
-              ),
-            ],
-          ),
-        );
-      }
-    }
-
-    final profileData = Column(
-      children: [
-        SizedBox(
-          height: screenSize.height / 3.7,
+    final profileData = Container(
+        decoration: BoxDecoration(
+          color: Color(0xff243341),
+          borderRadius: BorderRadius.circular(5.0),
         ),
-        Container(
-          width: screenSize.width / 2.6,
-          child: Row(
-            children: [
-              Expanded(
+        width: 350,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: screenSize.height / 10,
+            ),
+            Image.asset(
+              'assets/logo_appbar.png',
+              height: 100,
+            ),
+            SizedBox(
+              height: screenSize.height / 10,
+            ),
+            MaterialButton(
+              onPressed: () {
+                context
+                    .read<FlutterFireAuthService>()
+                    .twitterSignIn()
+                    .then((credential) async {
+                  await addUser(credential.additionalUserInfo.username);
+                  await setUpGrid();
+                });
+              },
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.0),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: signInColor(signIn),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(15.0),
-                    ),
-                    border: Border.all(color: signInBorder(signIn)),
+                    borderRadius: BorderRadius.circular(7.0),
+                    color: Color(0xff1ea2f1),
                   ),
-                  child: Padding(
-                    padding: EdgeInsets.all(5.0),
-                    child: MaterialButton(
-                      onPressed: () {
-                        setState(() {
-                          signIn = true;
-                        });
-                      },
-                      child: Text(
-                        "Sign In",
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Icon(
+                        CustomIcons.MyFlutterApp.twitter_squared,
+                        color: Colors.white,
+                        size: 50,
+                      ),
+                      Text(
+                        "Log In With Twitter",
                         style: GoogleFonts.roboto(
                           color: Colors.white,
-                          fontSize: 20,
+                          fontSize: 30.0,
                         ),
-                        textAlign: TextAlign.center,
                       ),
-                    ),
+                    ],
                   ),
                 ),
               ),
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: signUpColor(signIn),
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(15.0),
-                    ),
-                    border: Border.all(color: signUpBoder(signIn)),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(5.0),
-                    child: MaterialButton(
-                      onPressed: () {
-                        setState(() {
-                          signIn = false;
-                        });
-                      },
-                      child: Text(
-                        "Sign Up",
-                        style: GoogleFonts.roboto(
-                          color: Colors.white,
-                          fontSize: 20,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        tabs(),
-        SizedBox(
-          height: screenSize.height / 3.7,
-        ),
-      ],
-    );
-
-    final profileDataSmall = Column(
-      children: [
-        SizedBox(
-          height: screenSize.height / 3.7,
-        ),
-        Container(
-          width: screenSize.width / 1.2,
-          child: Row(
-            children: [
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: signInColor(signIn),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(15.0),
-                    ),
-                    border: Border.all(color: signInBorder(signIn)),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(5.0),
-                    child: MaterialButton(
-                      onPressed: () {
-                        setState(() {
-                          signIn = true;
-                        });
-                      },
-                      child: Text(
-                        "Sign In",
-                        style: GoogleFonts.roboto(
-                          color: Colors.white,
-                          fontSize: 20,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: signUpColor(signIn),
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(15.0),
-                    ),
-                    border: Border.all(color: signUpBoder(signIn)),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(5.0),
-                    child: MaterialButton(
-                      onPressed: () {
-                        setState(() {
-                          signIn = false;
-                        });
-                      },
-                      child: Text(
-                        "Sign Up",
-                        style: GoogleFonts.roboto(
-                          color: Colors.white,
-                          fontSize: 20,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        tabsSmall(),
-        SizedBox(
-          height: screenSize.height / 3.7,
-        ),
-      ],
-    );
+            ),
+            SizedBox(
+              height: screenSize.height / 10,
+            ),
+          ],
+        ));
 
     return ResponsiveWidget(
       largeScreen: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
+          SizedBox(height: screenSize.height / 3),
           profileData,
-          SizedBox(height: screenSize.height / 20),
+          SizedBox(height: screenSize.height / 3),
         ],
       ),
       smallScreen: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          profileDataSmall,
-          SizedBox(height: screenSize.height / 20),
+          SizedBox(height: screenSize.height / 3),
+          profileData,
+          SizedBox(height: screenSize.height / 3),
         ],
       ),
     );

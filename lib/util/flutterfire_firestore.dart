@@ -1,18 +1,30 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-Future<void> addUser(String twitterHandle) async {
+Future<bool> docExists() async {
+  var collectionRef = FirebaseFirestore.instance.collection('Users');
   String uid = FirebaseAuth.instance.currentUser.uid;
-  DateTime now = new DateTime.now();
-  String date = DateTime(now.year, now.month, now.day).toString();
-  date = date.split(" ")[0];
-  FirebaseFirestore.instance.collection('Users').doc(uid).set({
-    "UID": uid,
-    "Creation Date": date,
-    "Twitter Handle": twitterHandle,
-    "Tweet Count": 0,
-    "Last Check": date
-  });
+  var doc = await collectionRef.doc(uid).get();
+  return doc.exists;
+}
+
+Future<void> addUser(String twitterHandle) async {
+  bool exists = await docExists();
+  if (exists) {
+    return;
+  } else {
+    String uid = FirebaseAuth.instance.currentUser.uid;
+    DateTime now = new DateTime.now();
+    String date = DateTime(now.year, now.month, now.day).toString();
+    date = date.split(" ")[0];
+    FirebaseFirestore.instance.collection('Users').doc(uid).set({
+      "UID": uid,
+      "Creation Date": date,
+      "Twitter Handle": twitterHandle,
+      "Tweet Count": 0,
+      "Last Check": date
+    });
+  }
 }
 
 Future<void> addGrid(String uid, String gridName) async {
