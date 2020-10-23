@@ -1,4 +1,5 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:circular_check_box/circular_check_box.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flash/flash.dart';
@@ -95,6 +96,11 @@ class _HomeInfoState extends State<HomeInfo> {
   List<String> sectionTitles = ["", "", "", ""];
   String handle = "";
   TextEditingController tweetController = TextEditingController();
+  TextEditingController checklistController = TextEditingController();
+  ScrollController scrollListController =
+      ScrollController(initialScrollOffset: 45.0);
+  ScrollController smallScrollListController =
+      ScrollController(initialScrollOffset: 25.0);
 
   @override
   // ignore: must_call_super
@@ -399,6 +405,105 @@ class _HomeInfoState extends State<HomeInfo> {
                               EdgeInsets.symmetric(vertical: 5.0),
                           child: Text(
                             "Add Tweet",
+                            style: GoogleFonts.roboto(
+                              color: Colors.white,
+                              fontSize: 20.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+        title: 'This is Ignored',
+        desc: 'This is also Ignored',
+      )..show();
+      return dialog;
+    }
+
+    AwesomeDialog addToChecklist(double size) {
+      AwesomeDialog dialog;
+      dialog = AwesomeDialog(
+        context: context,
+        width: screenSize.width / size,
+        animType: AnimType.SCALE,
+        dialogType: DialogType.NO_HEADER,
+        body: StatefulBuilder(
+          builder: (context, setState) {
+            return Center(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20.0,
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Color(0xff45535e),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            cursorColor: Colors.white,
+                            controller: checklistController,
+                            decoration: InputDecoration(
+                              hintText: "Enter Daily Checklist Task Here",
+                              hintStyle: GoogleFonts.roboto(
+                                color: Colors.white,
+                                fontSize: 20.0,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                                borderSide: BorderSide(
+                                  color: Color(0xff45535e),
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                                borderSide: BorderSide(
+                                  color: Color(0xff45535e),
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                                borderSide: BorderSide(
+                                  color: Color(0xff45535e),
+                                ),
+                              ),
+                            ),
+                            style: GoogleFonts.roboto(
+                              color: Colors.white,
+                              fontSize: 20.0,
+                            ),
+                            maxLines: 4,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 5.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5.0),
+                        color: Color(0xff243341),
+                      ),
+                      child: MaterialButton(
+                        onPressed: () async {
+                          await addItemToChecklist(checklistController.text);
+                          checklistController.text = "";
+                          dialog.dissmiss();
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 15.0) +
+                              EdgeInsets.symmetric(vertical: 5.0),
+                          child: Text(
+                            "Add Task",
                             style: GoogleFonts.roboto(
                               color: Colors.white,
                               fontSize: 20.0,
@@ -812,56 +917,139 @@ class _HomeInfoState extends State<HomeInfo> {
           ),
           height: screenSize.height / 2.5,
           width: screenSize.width / 1.8,
-          child: Padding(
-            padding: EdgeInsets.all(25),
-            child: StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection('Users')
-                  .doc(FirebaseAuth.instance.currentUser.uid)
-                  .collection('Checklist')
-                  .snapshots(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (!snapshot.hasData) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
+          child: Stack(
+            children: [
+              Padding(
+                padding: EdgeInsets.all(25),
+                child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('Users')
+                      .doc(FirebaseAuth.instance.currentUser.uid)
+                      .collection('Checklist')
+                      .snapshots(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (!snapshot.hasData) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
 
-                return ListView(
-                  children: snapshot.data.docs.map((document) {
-                    return Center(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          vertical: 10.0,
-                        ),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Color(0xff15202b),
-                            borderRadius: BorderRadius.circular(5.0),
+                    return ListView(
+                      controller: scrollListController,
+                      children: snapshot.data.docs.map((document) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(
+                            vertical: 10.0,
                           ),
-                          width: screenSize.width / 1.4,
-                          child: Padding(
-                            padding: EdgeInsets.all(7),
-                            child: Row(
-                              children: [
-                                Text(
-                                  document.data()['Item'],
-                                  style: GoogleFonts.roboto(
-                                    color: Colors.white,
-                                    fontSize: 20.0,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Color(0xff15202b),
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            width: screenSize.width / 1.4,
+                            child: Slidable(
+                              actionPane: SlidableDrawerActionPane(),
+                              actionExtentRatio: 0.25,
+                              child: Container(
+                                width: screenSize.width / 1.4,
+                                decoration: BoxDecoration(
+                                  color: Color(0xff15202b),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.all(7),
+                                  child: Row(
+                                    children: [
+                                      CircularCheckBox(
+                                        value: document.data()['Done'],
+                                        checkColor: Colors.white,
+                                        activeColor: Colors.green,
+                                        inactiveColor: Colors.redAccent,
+                                        disabledColor: Colors.grey,
+                                        onChanged: (value) async {
+                                          await checkItem(document.id, value);
+                                        },
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                          document.data()['Item'],
+                                          style: GoogleFonts.roboto(
+                                            color: Colors.white,
+                                            fontSize: 20.0,
+                                          ),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
                                   ),
+                                ),
+                              ),
+                              secondaryActions: <Widget>[
+                                IconSlideAction(
+                                  caption: 'Delete',
+                                  color: Colors.red,
+                                  icon: Icons.delete,
+                                  onTap: () async {
+                                    await deleteFromChecklist(document.id);
+                                  },
                                 ),
                               ],
                             ),
                           ),
+                        );
+                      }).toList(),
+                    );
+                  },
+                ),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  color: Color(0xff15202b),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(5.0),
+                    topRight: Radius.circular(5.0),
+                  ),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    top: 5.0,
+                    bottom: 5.0,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        flex: 5,
+                        child: SizedBox(width: 25.0),
+                      ),
+                      Flexible(
+                        flex: 14,
+                        child: Text(
+                          "Daily Checklist",
+                          style: GoogleFonts.roboto(
+                            color: Colors.white,
+                            fontSize: 25.0,
+                          ),
                         ),
                       ),
-                    );
-                  }).toList(),
-                );
-              },
-            ),
+                      Flexible(
+                        flex: 5,
+                        child: IconButton(
+                          onPressed: () {
+                            addToChecklist(2);
+                          },
+                          icon: Icon(
+                            Icons.add_circle_outline,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
         SizedBox(
@@ -874,7 +1062,164 @@ class _HomeInfoState extends State<HomeInfo> {
           ),
           height: screenSize.height / 2.5,
           width: screenSize.width / 3.5,
-          child: Text(""),
+          child: Center(
+            child: Text(
+              "Coming Soon: Analytics",
+              style: GoogleFonts.roboto(
+                color: Colors.white,
+                fontSize: 30.0,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      ],
+    );
+
+    final checklistSmall = Column(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: Color(0xff243341),
+            borderRadius: BorderRadius.circular(5.0),
+          ),
+          height: screenSize.height / 2.5,
+          width: screenSize.width / 1.2,
+          child: Stack(
+            children: [
+              Padding(
+                padding: EdgeInsets.all(25),
+                child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('Users')
+                      .doc(FirebaseAuth.instance.currentUser.uid)
+                      .collection('Checklist')
+                      .snapshots(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (!snapshot.hasData) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+
+                    return ListView(
+                      controller: smallScrollListController,
+                      children: snapshot.data.docs.map((document) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(
+                            vertical: 10.0,
+                          ),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Color(0xff15202b),
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            width: screenSize.width / 1.4,
+                            child: Slidable(
+                              actionPane: SlidableDrawerActionPane(),
+                              actionExtentRatio: 0.25,
+                              child: Container(
+                                width: screenSize.width / 1.4,
+                                decoration: BoxDecoration(
+                                  color: Color(0xff15202b),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.all(7),
+                                  child: Row(
+                                    children: [
+                                      CircularCheckBox(
+                                        value: document.data()['Done'],
+                                        checkColor: Colors.white,
+                                        activeColor: Colors.green,
+                                        inactiveColor: Colors.redAccent,
+                                        disabledColor: Colors.grey,
+                                        onChanged: (value) async {
+                                          await checkItem(document.id, value);
+                                        },
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                          document.data()['Item'],
+                                          style: GoogleFonts.roboto(
+                                            color: Colors.white,
+                                            fontSize: 20.0,
+                                          ),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              secondaryActions: <Widget>[
+                                IconSlideAction(
+                                  caption: 'Delete',
+                                  color: Colors.red,
+                                  icon: Icons.delete,
+                                  onTap: () async {
+                                    await deleteFromChecklist(document.id);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    );
+                  },
+                ),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  color: Color(0xff15202b),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(5.0),
+                    topRight: Radius.circular(5.0),
+                  ),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    top: 5.0,
+                    bottom: 5.0,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        flex: 5,
+                        child: SizedBox(width: 25.0),
+                      ),
+                      Flexible(
+                        flex: 14,
+                        child: Text(
+                          "Daily Checklist",
+                          style: GoogleFonts.roboto(
+                            color: Colors.white,
+                            fontSize: 25.0,
+                          ),
+                        ),
+                      ),
+                      Flexible(
+                        flex: 5,
+                        child: IconButton(
+                          onPressed: () {
+                            addToChecklist(1);
+                          },
+                          icon: Icon(
+                            Icons.add_circle_outline,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -887,6 +1232,20 @@ class _HomeInfoState extends State<HomeInfo> {
           SizedBox(height: screenSize.height / 20),
           checklist,
           SizedBox(height: screenSize.height / 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Tweet Backlog",
+                style: GoogleFonts.roboto(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 36,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: screenSize.height / 20),
           profileData,
           SizedBox(height: screenSize.height / 20),
         ],
@@ -895,6 +1254,22 @@ class _HomeInfoState extends State<HomeInfo> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
+          SizedBox(height: screenSize.height / 20),
+          checklistSmall,
+          SizedBox(height: screenSize.height / 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Tweet Backlog",
+                style: GoogleFonts.roboto(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 36,
+                ),
+              ),
+            ],
+          ),
           SizedBox(height: screenSize.height / 20),
           profileDataSmall,
           SizedBox(height: screenSize.height / 20),

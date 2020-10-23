@@ -183,11 +183,20 @@ Future<void> sameDayCheck() async {
 
 Future<void> checkItem(String id, bool value) async {
   String uid = FirebaseAuth.instance.currentUser.uid;
-
   FirebaseFirestore.instance
       .collection('Users')
       .doc(uid)
       .collection('Checklist')
       .doc(id)
       .update({"Done": value});
+}
+
+Future<void> deleteFromChecklist(String id) async {
+  String uid = FirebaseAuth.instance.currentUser.uid;
+  FirebaseFirestore.instance
+      .collection('Users')
+      .doc(uid)
+      .collection('Checklist')
+      .doc(id)
+      .delete();
 }
