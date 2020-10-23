@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shut_up_and_tweet/util/flutterfire_auth_service.dart';
 
 class ExploreDrawer extends StatefulWidget {
   const ExploreDrawer({
@@ -43,6 +45,22 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
                 },
                 child: Text(
                   'Archived',
+                  style: TextStyle(color: Colors.white, fontSize: 22),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+                child: Divider(
+                  color: Colors.white,
+                  thickness: 2,
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  context.read<FlutterFireAuthService>().signOut();
+                },
+                child: Text(
+                  'Sign Out',
                   style: TextStyle(color: Colors.white, fontSize: 22),
                 ),
               ),

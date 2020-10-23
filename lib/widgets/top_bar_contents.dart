@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shut_up_and_tweet/util/flutterfire_auth_service.dart';
 
 class TopBarContents extends StatefulWidget {
   final double opacity;
@@ -113,6 +115,45 @@ class _TopBarContentsState extends State<TopBarContents> {
                             maintainState: true,
                             maintainSize: true,
                             visible: _isHovering[1],
+                            child: Container(
+                              height: 2,
+                              width: 20,
+                              color: Color(0xff8c53ff),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: 15),
+                    InkWell(
+                      onHover: (value) {
+                        setState(() {
+                          value
+                              ? _isHovering[2] = true
+                              : _isHovering[2] = false;
+                        });
+                      },
+                      onTap: () {
+                        context.read<FlutterFireAuthService>().signOut();
+                      },
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Sign Out',
+                            style: GoogleFonts.lato(
+                              fontSize: 25.0,
+                              color: _isHovering[2]
+                                  ? Color(0xff8c53ff)
+                                  : Colors.white,
+                            ),
+                          ),
+                          SizedBox(height: 5),
+                          Visibility(
+                            maintainAnimation: true,
+                            maintainState: true,
+                            maintainSize: true,
+                            visible: _isHovering[2],
                             child: Container(
                               height: 2,
                               width: 20,
