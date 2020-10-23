@@ -10,15 +10,15 @@ The hope is that it will be a place where users can store their tweet ideas and 
 * As a user I can delete tweets
 * As a user I can archive tweets
 * As a user I can view tweets by category, ordered from oldest to newest
+* As a user I can see a list of archived tweets
+* As a user I can click a copy button to save the tweet to my clipboard
+* As a user I can see how many characters I have left that I can add to my tweet
 
 ## Feature to be added:
 
-* As a user I can see a list of archived tweets
-* As a user I can click a copy button to save the tweet to my clipboard
 * As a user I can change the name of the category
 * As a user I can see statistics on how many tweets I've created
 * As a user I can hook-up my twitter account and post directly from the app
-* As a user I can see how many characters I have left that I can add to my tweet
 * As a user I can tag people from twitter
 * As a user I can see a list of daily checklist items to complete
 * As a user I can see statistics on my Twitter follower count
