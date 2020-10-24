@@ -1,16 +1,16 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:circular_check_box/circular_check_box.dart';
+import 'package:clipboard/clipboard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:clipboard/clipboard.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shut_up_and_tweet/model/tweet.dart';
 import 'package:shut_up_and_tweet/model/user.dart';
 import 'package:shut_up_and_tweet/util/twitter_api.dart';
+import 'package:shut_up_and_tweet/widgets/dialogs.dart';
 
 import '../util/responsive_widget.dart';
 import '../util/flutterfire_firestore.dart';
@@ -103,10 +103,6 @@ class _HomeInfoState extends State<HomeInfo> {
   List<Tweet> tweets = [];
   TextEditingController tweetController = TextEditingController();
   TextEditingController checklistController = TextEditingController();
-  ScrollController scrollListController =
-      ScrollController(initialScrollOffset: 45.0);
-  ScrollController smallScrollListController =
-      ScrollController(initialScrollOffset: 25.0);
 
   @override
   // ignore: must_call_super
@@ -136,411 +132,6 @@ class _HomeInfoState extends State<HomeInfo> {
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
-
-    void showCenterFlash({
-      FlashPosition position,
-      FlashStyle style,
-      Alignment alignment,
-      String message,
-    }) {
-      showFlash(
-        context: context,
-        duration: Duration(seconds: 3),
-        builder: (_, controller) {
-          return Flash(
-            controller: controller,
-            backgroundColor: Colors.black,
-            borderRadius: BorderRadius.circular(5.0),
-            borderColor: Colors.red,
-            position: position,
-            style: style,
-            alignment: alignment,
-            enableDrag: false,
-            onTap: () => controller.dismiss(),
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: DefaultTextStyle(
-                style: GoogleFonts.roboto(
-                  color: Colors.white,
-                ),
-                child: Text(
-                  message,
-                ),
-              ),
-            ),
-          );
-        },
-      );
-    }
-
-    Color countColor(String word) {
-      if (word.length > 280) {
-        return Colors.red;
-      } else {
-        return Colors.black;
-      }
-    }
-
-    AwesomeDialog showPopup(int section) {
-      AwesomeDialog dialog;
-      dialog = AwesomeDialog(
-        context: context,
-        width: screenSize.width / 2,
-        animType: AnimType.SCALE,
-        dialogType: DialogType.NO_HEADER,
-        body: StatefulBuilder(
-          builder: (context, setState) {
-            return Center(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 30.0,
-                    ),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Color(0xff45535e),
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: Column(
-                        children: [
-                          TextFormField(
-                            cursorColor: Colors.white,
-                            controller: tweetController,
-                            onChanged: (value) {
-                              setState(() {});
-                            },
-                            decoration: InputDecoration(
-                              hintText: "Enter Tweet Here",
-                              hintStyle: GoogleFonts.roboto(
-                                color: Colors.white,
-                                fontSize: 20.0,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                                borderSide: BorderSide(
-                                  color: Color(0xff45535e),
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                                borderSide: BorderSide(
-                                  color: Color(0xff45535e),
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                                borderSide: BorderSide(
-                                  color: Color(0xff45535e),
-                                ),
-                              ),
-                            ),
-                            style: GoogleFonts.roboto(
-                              color: Colors.white,
-                              fontSize: 20.0,
-                            ),
-                            maxLines: 5,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(
-                                  right: 5.0,
-                                  bottom: 5.0,
-                                ),
-                                child: Text(
-                                  (280 - tweetController.text.length)
-                                      .toString(),
-                                  style: GoogleFonts.roboto(
-                                    fontWeight: FontWeight.bold,
-                                    color: countColor(
-                                      tweetController.text,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 5.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5.0),
-                        color: Color(0xff243341),
-                      ),
-                      child: MaterialButton(
-                        onPressed: () async {
-                          if (tweetController.text.length > 280) {
-                            showCenterFlash(
-                              alignment: Alignment.center,
-                              message: 'You need to shorten your tweet',
-                            );
-                          } else {
-                            await addTweet(
-                                tweetController.text, sections[section]);
-                            tweetController.text = "";
-                            dialog.dissmiss();
-                          }
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15.0) +
-                              EdgeInsets.symmetric(vertical: 5.0),
-                          child: Text(
-                            "Add Tweet",
-                            style: GoogleFonts.roboto(
-                              color: Colors.white,
-                              fontSize: 20.0,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
-        title: 'This is Ignored',
-        desc: 'This is also Ignored',
-      )..show();
-      return dialog;
-    }
-
-    AwesomeDialog showSmallPopup(int section) {
-      AwesomeDialog dialog;
-      dialog = AwesomeDialog(
-        context: context,
-        width: screenSize.width / 1,
-        animType: AnimType.SCALE,
-        dialogType: DialogType.NO_HEADER,
-        body: StatefulBuilder(
-          builder: (context, setState) {
-            return Center(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 15.0,
-                    ),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Color(0xff45535e),
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: Column(
-                        children: [
-                          TextFormField(
-                            cursorColor: Colors.white,
-                            controller: tweetController,
-                            onChanged: (value) {
-                              setState(() {});
-                            },
-                            decoration: InputDecoration(
-                              hintText: "Enter Tweet Here",
-                              hintStyle: GoogleFonts.roboto(
-                                color: Colors.white,
-                                fontSize: 20.0,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                                borderSide: BorderSide(
-                                  color: Color(0xff45535e),
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                                borderSide: BorderSide(
-                                  color: Color(0xff45535e),
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                                borderSide: BorderSide(
-                                  color: Color(0xff45535e),
-                                ),
-                              ),
-                            ),
-                            style: GoogleFonts.roboto(
-                              color: Colors.white,
-                              fontSize: 20.0,
-                            ),
-                            maxLines: 5,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(
-                                  right: 5.0,
-                                  bottom: 5.0,
-                                ),
-                                child: Text(
-                                  (280 - tweetController.text.length)
-                                      .toString(),
-                                  style: GoogleFonts.roboto(
-                                    fontWeight: FontWeight.bold,
-                                    color: countColor(
-                                      tweetController.text,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 5.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5.0),
-                        color: Color(0xff243341),
-                      ),
-                      child: MaterialButton(
-                        onPressed: () async {
-                          if (tweetController.text.length > 280) {
-                            showCenterFlash(
-                              alignment: Alignment.center,
-                              message: 'You need to shorten your tweet',
-                            );
-                          } else {
-                            await addTweet(
-                                tweetController.text, sections[section]);
-                            tweetController.text = "";
-                            dialog.dissmiss();
-                          }
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15.0) +
-                              EdgeInsets.symmetric(vertical: 5.0),
-                          child: Text(
-                            "Add Tweet",
-                            style: GoogleFonts.roboto(
-                              color: Colors.white,
-                              fontSize: 20.0,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
-        title: 'This is Ignored',
-        desc: 'This is also Ignored',
-      )..show();
-      return dialog;
-    }
-
-    AwesomeDialog addToChecklist(double size) {
-      AwesomeDialog dialog;
-      dialog = AwesomeDialog(
-        context: context,
-        width: screenSize.width / size,
-        animType: AnimType.SCALE,
-        dialogType: DialogType.NO_HEADER,
-        body: StatefulBuilder(
-          builder: (context, setState) {
-            return Center(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 20.0,
-                    ),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Color(0xff45535e),
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: Column(
-                        children: [
-                          TextFormField(
-                            cursorColor: Colors.white,
-                            controller: checklistController,
-                            decoration: InputDecoration(
-                              hintText: "Enter Daily Checklist Task Here",
-                              hintStyle: GoogleFonts.roboto(
-                                color: Colors.white,
-                                fontSize: 20.0,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                                borderSide: BorderSide(
-                                  color: Color(0xff45535e),
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                                borderSide: BorderSide(
-                                  color: Color(0xff45535e),
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                                borderSide: BorderSide(
-                                  color: Color(0xff45535e),
-                                ),
-                              ),
-                            ),
-                            style: GoogleFonts.roboto(
-                              color: Colors.white,
-                              fontSize: 20.0,
-                            ),
-                            maxLines: 4,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 5.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5.0),
-                        color: Color(0xff243341),
-                      ),
-                      child: MaterialButton(
-                        onPressed: () async {
-                          await addItemToChecklist(checklistController.text);
-                          checklistController.text = "";
-                          dialog.dissmiss();
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15.0) +
-                              EdgeInsets.symmetric(vertical: 5.0),
-                          child: Text(
-                            "Add Task",
-                            style: GoogleFonts.roboto(
-                              color: Colors.white,
-                              fontSize: 20.0,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
-        title: 'This is Ignored',
-        desc: 'This is also Ignored',
-      )..show();
-      return dialog;
-    }
 
     Widget gridBox(int section) {
       return Container(
@@ -585,7 +176,7 @@ class _HomeInfoState extends State<HomeInfo> {
                               color: Color(0xff15202b),
                             ),
                             child: Padding(
-                              padding: EdgeInsets.all(5.0),
+                              padding: EdgeInsets.all(15.0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -623,6 +214,7 @@ class _HomeInfoState extends State<HomeInfo> {
                                     style: GoogleFonts.roboto(
                                       color: Colors.white,
                                       fontSize: 20.0,
+                                      height: 1.1,
                                     ),
                                   ),
                                 ],
@@ -692,7 +284,13 @@ class _HomeInfoState extends State<HomeInfo> {
                       flex: 5,
                       child: IconButton(
                         onPressed: () {
-                          showPopup(section);
+                          showPopup(
+                            section,
+                            tweetController,
+                            sections,
+                            2,
+                            context,
+                          );
                         },
                         icon: Icon(
                           Icons.add_circle_outline,
@@ -859,7 +457,13 @@ class _HomeInfoState extends State<HomeInfo> {
                       flex: 5,
                       child: IconButton(
                         onPressed: () {
-                          showSmallPopup(section);
+                          showPopup(
+                            section,
+                            tweetController,
+                            sections,
+                            1,
+                            context,
+                          );
                         },
                         icon: Icon(
                           Icons.add_circle_outline,
@@ -938,7 +542,7 @@ class _HomeInfoState extends State<HomeInfo> {
           child: Stack(
             children: [
               Padding(
-                padding: EdgeInsets.all(25),
+                padding: EdgeInsets.all(25) + EdgeInsets.only(top: 35),
                 child: StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection('Users')
@@ -953,70 +557,73 @@ class _HomeInfoState extends State<HomeInfo> {
                       );
                     }
 
-                    return ListView(
-                      controller: scrollListController,
-                      children: snapshot.data.docs.map((document) {
-                        return Padding(
-                          padding: EdgeInsets.symmetric(
-                            vertical: 10.0,
-                          ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Color(0xff15202b),
-                              borderRadius: BorderRadius.circular(5.0),
+                    return MediaQuery.removePadding(
+                      context: context,
+                      removeTop: true,
+                      child: ListView(
+                        children: snapshot.data.docs.map((document) {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: 10.0,
                             ),
-                            width: screenSize.width / 1.4,
-                            child: Slidable(
-                              actionPane: SlidableDrawerActionPane(),
-                              actionExtentRatio: 0.25,
-                              child: Container(
-                                width: screenSize.width / 1.4,
-                                decoration: BoxDecoration(
-                                  color: Color(0xff15202b),
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsets.all(7),
-                                  child: Row(
-                                    children: [
-                                      CircularCheckBox(
-                                        value: document.data()['Done'],
-                                        checkColor: Colors.white,
-                                        activeColor: Colors.green,
-                                        inactiveColor: Colors.redAccent,
-                                        disabledColor: Colors.grey,
-                                        onChanged: (value) async {
-                                          await checkItem(document.id, value);
-                                        },
-                                      ),
-                                      Expanded(
-                                        child: Text(
-                                          document.data()['Item'],
-                                          style: GoogleFonts.roboto(
-                                            color: Colors.white,
-                                            fontSize: 20.0,
-                                          ),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Color(0xff15202b),
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              width: screenSize.width / 1.4,
+                              child: Slidable(
+                                actionPane: SlidableDrawerActionPane(),
+                                actionExtentRatio: 0.25,
+                                child: Container(
+                                  width: screenSize.width / 1.4,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xff15202b),
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(7),
+                                    child: Row(
+                                      children: [
+                                        CircularCheckBox(
+                                          value: document.data()['Done'],
+                                          checkColor: Colors.white,
+                                          activeColor: Colors.green,
+                                          inactiveColor: Colors.redAccent,
+                                          disabledColor: Colors.grey,
+                                          onChanged: (value) async {
+                                            await checkItem(document.id, value);
+                                          },
                                         ),
-                                      ),
-                                    ],
+                                        Expanded(
+                                          child: Text(
+                                            document.data()['Item'],
+                                            style: GoogleFonts.roboto(
+                                              color: Colors.white,
+                                              fontSize: 20.0,
+                                            ),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
+                                secondaryActions: <Widget>[
+                                  IconSlideAction(
+                                    caption: 'Delete',
+                                    color: Colors.red,
+                                    icon: Icons.delete,
+                                    onTap: () async {
+                                      await deleteFromChecklist(document.id);
+                                    },
+                                  ),
+                                ],
                               ),
-                              secondaryActions: <Widget>[
-                                IconSlideAction(
-                                  caption: 'Delete',
-                                  color: Colors.red,
-                                  icon: Icons.delete,
-                                  onTap: () async {
-                                    await deleteFromChecklist(document.id);
-                                  },
-                                ),
-                              ],
                             ),
-                          ),
-                        );
-                      }).toList(),
+                          );
+                        }).toList(),
+                      ),
                     );
                   },
                 ),
@@ -1055,7 +662,11 @@ class _HomeInfoState extends State<HomeInfo> {
                         flex: 5,
                         child: IconButton(
                           onPressed: () {
-                            addToChecklist(2);
+                            addToChecklist(
+                              2,
+                              checklistController,
+                              context,
+                            );
                           },
                           icon: Icon(
                             Icons.add_circle_outline,
@@ -1151,62 +762,63 @@ class _HomeInfoState extends State<HomeInfo> {
                   ],
                 ),
                 Container(
-                    height: screenSize.height / 4,
-                    child: MediaQuery.removePadding(
-                      removeTop: true,
-                      context: context,
-                      child: ListView.builder(
-                        itemCount: tweets.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: EdgeInsets.all(5.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Color(0xff15202b),
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.all(5.0),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      tweets[index].tweet,
-                                      style: GoogleFonts.roboto(
-                                        height: 1.5,
-                                        color: Colors.white,
-                                        fontSize: 15,
+                  height: screenSize.height / 4,
+                  child: MediaQuery.removePadding(
+                    removeTop: true,
+                    context: context,
+                    child: ListView.builder(
+                      itemCount: tweets.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: EdgeInsets.all(5.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Color(0xff15202b),
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(5.0),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    tweets[index].tweet,
+                                    style: GoogleFonts.roboto(
+                                      height: 1.5,
+                                      color: Colors.white,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        "Retweets: ${tweets[index].retweetCount}",
+                                        style: GoogleFonts.roboto(
+                                          height: 1.5,
+                                          color: Color(0xff45535e),
+                                          fontSize: 15,
+                                        ),
                                       ),
-                                    ),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        Text(
-                                          "Retweets: ${tweets[index].retweetCount}",
-                                          style: GoogleFonts.roboto(
-                                            height: 1.5,
-                                            color: Color(0xff45535e),
-                                            fontSize: 15,
-                                          ),
+                                      SizedBox(width: 10),
+                                      Text(
+                                        "Likes: ${tweets[index].favoriteCount}",
+                                        style: GoogleFonts.roboto(
+                                          height: 1.5,
+                                          color: Color(0xff45535e),
+                                          fontSize: 15,
                                         ),
-                                        SizedBox(width: 10),
-                                        Text(
-                                          "Likes: ${tweets[index].favoriteCount}",
-                                          style: GoogleFonts.roboto(
-                                            height: 1.5,
-                                            color: Color(0xff45535e),
-                                            fontSize: 15,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
                             ),
-                          );
-                        },
-                      ),
-                    )),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -1226,7 +838,7 @@ class _HomeInfoState extends State<HomeInfo> {
           child: Stack(
             children: [
               Padding(
-                padding: EdgeInsets.all(25),
+                padding: EdgeInsets.all(25) + EdgeInsets.only(top: 35),
                 child: StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection('Users')
@@ -1241,70 +853,73 @@ class _HomeInfoState extends State<HomeInfo> {
                       );
                     }
 
-                    return ListView(
-                      controller: smallScrollListController,
-                      children: snapshot.data.docs.map((document) {
-                        return Padding(
-                          padding: EdgeInsets.symmetric(
-                            vertical: 10.0,
-                          ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Color(0xff15202b),
-                              borderRadius: BorderRadius.circular(5.0),
+                    return MediaQuery.removePadding(
+                      context: context,
+                      removeTop: true,
+                      child: ListView(
+                        children: snapshot.data.docs.map((document) {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: 10.0,
                             ),
-                            width: screenSize.width / 1.4,
-                            child: Slidable(
-                              actionPane: SlidableDrawerActionPane(),
-                              actionExtentRatio: 0.25,
-                              child: Container(
-                                width: screenSize.width / 1.4,
-                                decoration: BoxDecoration(
-                                  color: Color(0xff15202b),
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsets.all(7),
-                                  child: Row(
-                                    children: [
-                                      CircularCheckBox(
-                                        value: document.data()['Done'],
-                                        checkColor: Colors.white,
-                                        activeColor: Colors.green,
-                                        inactiveColor: Colors.redAccent,
-                                        disabledColor: Colors.grey,
-                                        onChanged: (value) async {
-                                          await checkItem(document.id, value);
-                                        },
-                                      ),
-                                      Expanded(
-                                        child: Text(
-                                          document.data()['Item'],
-                                          style: GoogleFonts.roboto(
-                                            color: Colors.white,
-                                            fontSize: 20.0,
-                                          ),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Color(0xff15202b),
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              width: screenSize.width / 1.4,
+                              child: Slidable(
+                                actionPane: SlidableDrawerActionPane(),
+                                actionExtentRatio: 0.25,
+                                child: Container(
+                                  width: screenSize.width / 1.4,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xff15202b),
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(7),
+                                    child: Row(
+                                      children: [
+                                        CircularCheckBox(
+                                          value: document.data()['Done'],
+                                          checkColor: Colors.white,
+                                          activeColor: Colors.green,
+                                          inactiveColor: Colors.redAccent,
+                                          disabledColor: Colors.grey,
+                                          onChanged: (value) async {
+                                            await checkItem(document.id, value);
+                                          },
                                         ),
-                                      ),
-                                    ],
+                                        Expanded(
+                                          child: Text(
+                                            document.data()['Item'],
+                                            style: GoogleFonts.roboto(
+                                              color: Colors.white,
+                                              fontSize: 20.0,
+                                            ),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
+                                secondaryActions: <Widget>[
+                                  IconSlideAction(
+                                    caption: 'Delete',
+                                    color: Colors.red,
+                                    icon: Icons.delete,
+                                    onTap: () async {
+                                      await deleteFromChecklist(document.id);
+                                    },
+                                  ),
+                                ],
                               ),
-                              secondaryActions: <Widget>[
-                                IconSlideAction(
-                                  caption: 'Delete',
-                                  color: Colors.red,
-                                  icon: Icons.delete,
-                                  onTap: () async {
-                                    await deleteFromChecklist(document.id);
-                                  },
-                                ),
-                              ],
                             ),
-                          ),
-                        );
-                      }).toList(),
+                          );
+                        }).toList(),
+                      ),
                     );
                   },
                 ),
@@ -1343,7 +958,11 @@ class _HomeInfoState extends State<HomeInfo> {
                         flex: 5,
                         child: IconButton(
                           onPressed: () {
-                            addToChecklist(1);
+                            addToChecklist(
+                              1,
+                              checklistController,
+                              context,
+                            );
                           },
                           icon: Icon(
                             Icons.add_circle_outline,
