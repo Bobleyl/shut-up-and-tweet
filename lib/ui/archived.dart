@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:clipboard/clipboard.dart';
+import 'package:shut_up_and_tweet/ui/theme/colors.dart';
+import 'package:shut_up_and_tweet/widgets/dialogs.dart';
 
 import '../util/responsive_widget.dart';
 import '../util/flutterfire_firestore.dart';
@@ -47,8 +49,7 @@ class _ArchivedPageState extends State<ArchivedPage> {
       extendBodyBehindAppBar: true,
       appBar: ResponsiveWidget.isSmallScreen(context)
           ? AppBar(
-              backgroundColor:
-                  Theme.of(context).bottomAppBarColor.withOpacity(_opacity),
+              backgroundColor: AppColors().bleylDevPurple.withOpacity(_opacity),
               elevation: 0,
               centerTitle: true,
             )
@@ -112,46 +113,10 @@ class _HomeInfoState extends State<HomeInfo> {
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
 
-    void showCenterFlash({
-      FlashPosition position,
-      FlashStyle style,
-      Alignment alignment,
-      String message,
-    }) {
-      showFlash(
-        context: context,
-        duration: Duration(seconds: 3),
-        builder: (_, controller) {
-          return Flash(
-            controller: controller,
-            backgroundColor: Colors.black,
-            borderRadius: BorderRadius.circular(5.0),
-            borderColor: Colors.red,
-            position: position,
-            style: style,
-            alignment: alignment,
-            enableDrag: false,
-            onTap: () => controller.dismiss(),
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: DefaultTextStyle(
-                style: GoogleFonts.roboto(
-                  color: Colors.white,
-                ),
-                child: Text(
-                  message,
-                ),
-              ),
-            ),
-          );
-        },
-      );
-    }
-
     Widget gridBox(int section) {
       return Container(
         decoration: BoxDecoration(
-          color: Color(0xff243341),
+          color: AppColors().mediumTwitter,
           borderRadius: BorderRadius.circular(5.0),
         ),
         width: screenSize.width / 2.3,
@@ -187,9 +152,8 @@ class _HomeInfoState extends State<HomeInfo> {
                           actionExtentRatio: 0.25,
                           child: Container(
                             width: screenSize.width / 2.5,
-                            decoration: BoxDecoration(
-                              color: Color(0xff15202b),
-                            ),
+                            decoration:
+                                BoxDecoration(color: AppColors().darkTwitter),
                             child: Padding(
                               padding: EdgeInsets.all(5.0),
                               child: Column(
@@ -202,7 +166,7 @@ class _HomeInfoState extends State<HomeInfo> {
                                       Text(
                                         "@" + handle,
                                         style: GoogleFonts.roboto(
-                                          color: Color(0xff45535e),
+                                          color: AppColors().lightTwitter,
                                           fontSize: 15.0,
                                         ),
                                       ),
@@ -211,13 +175,15 @@ class _HomeInfoState extends State<HomeInfo> {
                                           FlutterClipboard.copy(
                                               document['Tweet']);
                                           showCenterFlash(
-                                              position: FlashPosition.top,
-                                              style: FlashStyle.floating,
-                                              message: 'Copied Tweet');
+                                            position: FlashPosition.top,
+                                            style: FlashStyle.floating,
+                                            message: 'Copied Tweet',
+                                            context: context,
+                                          );
                                         },
                                         icon: Icon(
                                           Icons.copy,
-                                          color: Color(0xff45535e),
+                                          color: AppColors().lightTwitter,
                                           size: 18,
                                         ),
                                       ),
@@ -255,7 +221,7 @@ class _HomeInfoState extends State<HomeInfo> {
             ),
             Container(
               decoration: BoxDecoration(
-                color: Color(0xff15202b),
+                color: AppColors().darkTwitter,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(5.0),
                   topRight: Radius.circular(5.0),
@@ -289,7 +255,7 @@ class _HomeInfoState extends State<HomeInfo> {
     Widget gridBoxSmall(int section) {
       return Container(
         decoration: BoxDecoration(
-          color: Color(0xff243341),
+          color: AppColors().mediumTwitter,
           borderRadius: BorderRadius.circular(5.0),
         ),
         width: screenSize.width / 1.2,
@@ -325,9 +291,8 @@ class _HomeInfoState extends State<HomeInfo> {
                           actionExtentRatio: 0.25,
                           child: Container(
                             width: screenSize.width / 1.4,
-                            decoration: BoxDecoration(
-                              color: Color(0xff15202b),
-                            ),
+                            decoration:
+                                BoxDecoration(color: AppColors().darkTwitter),
                             child: Padding(
                               padding: EdgeInsets.all(5.0),
                               child: Column(
@@ -340,7 +305,7 @@ class _HomeInfoState extends State<HomeInfo> {
                                       Text(
                                         "@" + handle,
                                         style: GoogleFonts.roboto(
-                                          color: Color(0xff45535e),
+                                          color: AppColors().lightTwitter,
                                           fontSize: 15.0,
                                         ),
                                       ),
@@ -349,13 +314,15 @@ class _HomeInfoState extends State<HomeInfo> {
                                           FlutterClipboard.copy(
                                               document['Tweet']);
                                           showCenterFlash(
-                                              position: FlashPosition.top,
-                                              style: FlashStyle.floating,
-                                              message: 'Copied Tweet');
+                                            position: FlashPosition.top,
+                                            style: FlashStyle.floating,
+                                            message: 'Copied Tweet',
+                                            context: context,
+                                          );
                                         },
                                         icon: Icon(
                                           Icons.copy,
-                                          color: Color(0xff45535e),
+                                          color: AppColors().lightTwitter,
                                           size: 18,
                                         ),
                                       ),
@@ -393,7 +360,7 @@ class _HomeInfoState extends State<HomeInfo> {
             ),
             Container(
               decoration: BoxDecoration(
-                color: Color(0xff15202b),
+                color: AppColors().darkTwitter,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(5.0),
                   topRight: Radius.circular(5.0),

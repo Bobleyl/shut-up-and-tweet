@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shut_up_and_tweet/ui/home_page.dart';
+import 'package:shut_up_and_tweet/ui/theme/colors.dart';
 import 'package:shut_up_and_tweet/util/flutterfire_auth_service.dart';
 import 'package:shut_up_and_tweet/util/flutterfire_firestore.dart';
 import '../util/responsive_widget.dart';
@@ -87,7 +88,7 @@ class _HomeInfoState extends State<HomeInfo> {
 
     final profileData = Container(
         decoration: BoxDecoration(
-          color: Color(0xff243341),
+          color: AppColors().mediumTwitter,
           borderRadius: BorderRadius.circular(5.0),
         ),
         width: 350,

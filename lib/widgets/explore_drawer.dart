@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shut_up_and_tweet/ui/theme/colors.dart';
 import 'package:shut_up_and_tweet/util/flutterfire_auth_service.dart';
 
 class ExploreDrawer extends StatefulWidget {
@@ -16,7 +17,7 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
   Widget build(BuildContext context) {
     return Drawer(
       child: Container(
-        color: Theme.of(context).bottomAppBarColor,
+        color: AppColors().bleylDevPurple,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(

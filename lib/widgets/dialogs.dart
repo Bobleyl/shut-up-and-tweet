@@ -2,6 +2,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shut_up_and_tweet/ui/theme/colors.dart';
 import 'package:shut_up_and_tweet/util/flutterfire_firestore.dart';
 
 Color countColor(String word) {
@@ -73,7 +74,7 @@ AwesomeDialog showPopup(
                 ),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Color(0xff45535e),
+                    color: AppColors().lightTwitter,
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   child: Column(
@@ -93,19 +94,19 @@ AwesomeDialog showPopup(
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8.0),
                             borderSide: BorderSide(
-                              color: Color(0xff45535e),
+                              color: AppColors().lightTwitter,
                             ),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8.0),
                             borderSide: BorderSide(
-                              color: Color(0xff45535e),
+                              color: AppColors().lightTwitter,
                             ),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8.0),
                             borderSide: BorderSide(
-                              color: Color(0xff45535e),
+                              color: AppColors().lightTwitter,
                             ),
                           ),
                         ),
@@ -144,7 +145,7 @@ AwesomeDialog showPopup(
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5.0),
-                    color: Color(0xff243341),
+                    color: AppColors().mediumTwitter,
                   ),
                   child: MaterialButton(
                     onPressed: () async {
@@ -206,7 +207,7 @@ AwesomeDialog addToChecklist(
                 ),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Color(0xff45535e),
+                    color: AppColors().lightTwitter,
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   child: Column(
@@ -223,19 +224,19 @@ AwesomeDialog addToChecklist(
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8.0),
                             borderSide: BorderSide(
-                              color: Color(0xff45535e),
+                              color: AppColors().lightTwitter,
                             ),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8.0),
                             borderSide: BorderSide(
-                              color: Color(0xff45535e),
+                              color: AppColors().lightTwitter,
                             ),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8.0),
                             borderSide: BorderSide(
-                              color: Color(0xff45535e),
+                              color: AppColors().lightTwitter,
                             ),
                           ),
                         ),
@@ -254,7 +255,7 @@ AwesomeDialog addToChecklist(
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5.0),
-                    color: Color(0xff243341),
+                    color: AppColors().mediumTwitter,
                   ),
                   child: MaterialButton(
                     onPressed: () async {

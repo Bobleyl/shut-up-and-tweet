@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shut_up_and_tweet/ui/theme/colors.dart';
 import 'package:shut_up_and_tweet/util/flutterfire_auth_service.dart';
 
 class TopBarContents extends StatefulWidget {
@@ -27,7 +28,7 @@ class _TopBarContentsState extends State<TopBarContents> {
     return PreferredSize(
       preferredSize: Size(screenSize.width, 1000),
       child: Container(
-        color: Theme.of(context).bottomAppBarColor.withOpacity(widget.opacity),
+        color: AppColors().bleylDevPurple.withOpacity(widget.opacity),
         child: Padding(
           padding: EdgeInsets.all(20),
           child: Row(
@@ -66,7 +67,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                             style: GoogleFonts.lato(
                               fontSize: 25.0,
                               color: _isHovering[0]
-                                  ? Color(0xff8c53ff)
+                                  ? AppColors().bleylDevPurple
                                   : Colors.white,
                             ),
                           ),
@@ -79,7 +80,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                             child: Container(
                               height: 2,
                               width: 20,
-                              color: Color(0xff8c53ff),
+                              color: AppColors().bleylDevPurple,
                             ),
                           )
                         ],
@@ -105,7 +106,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                             style: GoogleFonts.lato(
                               fontSize: 25.0,
                               color: _isHovering[1]
-                                  ? Color(0xff8c53ff)
+                                  ? AppColors().bleylDevPurple
                                   : Colors.white,
                             ),
                           ),
@@ -118,7 +119,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                             child: Container(
                               height: 2,
                               width: 20,
-                              color: Color(0xff8c53ff),
+                              color: AppColors().bleylDevPurple,
                             ),
                           )
                         ],
@@ -144,7 +145,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                             style: GoogleFonts.lato(
                               fontSize: 25.0,
                               color: _isHovering[2]
-                                  ? Color(0xff8c53ff)
+                                  ? AppColors().bleylDevPurple
                                   : Colors.white,
                             ),
                           ),
@@ -157,7 +158,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                             child: Container(
                               height: 2,
                               width: 20,
-                              color: Color(0xff8c53ff),
+                              color: AppColors().bleylDevPurple,
                             ),
                           )
                         ],

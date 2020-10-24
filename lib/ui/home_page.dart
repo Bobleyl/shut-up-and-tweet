@@ -9,6 +9,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shut_up_and_tweet/model/tweet.dart';
 import 'package:shut_up_and_tweet/model/user.dart';
+import 'package:shut_up_and_tweet/ui/theme/colors.dart';
 import 'package:shut_up_and_tweet/util/twitter_api.dart';
 import 'package:shut_up_and_tweet/widgets/dialogs.dart';
 
@@ -53,8 +54,7 @@ class _HomePageState extends State<HomePage> {
       extendBodyBehindAppBar: true,
       appBar: ResponsiveWidget.isSmallScreen(context)
           ? AppBar(
-              backgroundColor:
-                  Theme.of(context).bottomAppBarColor.withOpacity(_opacity),
+              backgroundColor: AppColors().bleylDevPurple.withOpacity(_opacity),
               elevation: 0,
               centerTitle: true,
             )
@@ -136,7 +136,7 @@ class _HomeInfoState extends State<HomeInfo> {
     Widget gridBox(int section) {
       return Container(
         decoration: BoxDecoration(
-          color: Color(0xff243341),
+          color: AppColors().mediumTwitter,
           borderRadius: BorderRadius.circular(5.0),
         ),
         width: screenSize.width / 2.3,
@@ -173,7 +173,7 @@ class _HomeInfoState extends State<HomeInfo> {
                           child: Container(
                             width: screenSize.width / 2.5,
                             decoration: BoxDecoration(
-                              color: Color(0xff15202b),
+                              color: AppColors().darkTwitter,
                             ),
                             child: Padding(
                               padding: EdgeInsets.all(15.0),
@@ -187,7 +187,7 @@ class _HomeInfoState extends State<HomeInfo> {
                                       Text(
                                         "@" + handle,
                                         style: GoogleFonts.roboto(
-                                          color: Color(0xff45535e),
+                                          color: AppColors().lightTwitter,
                                           fontSize: 15.0,
                                         ),
                                       ),
@@ -196,13 +196,15 @@ class _HomeInfoState extends State<HomeInfo> {
                                           FlutterClipboard.copy(
                                               document['Tweet']);
                                           showCenterFlash(
-                                              position: FlashPosition.top,
-                                              style: FlashStyle.floating,
-                                              message: 'Copied Tweet');
+                                            position: FlashPosition.top,
+                                            style: FlashStyle.floating,
+                                            message: 'Copied Tweet',
+                                            context: context,
+                                          );
                                         },
                                         icon: Icon(
                                           Icons.copy,
-                                          color: Color(0xff45535e),
+                                          color: AppColors().lightTwitter,
                                           size: 18,
                                         ),
                                       ),
@@ -252,7 +254,7 @@ class _HomeInfoState extends State<HomeInfo> {
             ),
             Container(
               decoration: BoxDecoration(
-                color: Color(0xff15202b),
+                color: AppColors().darkTwitter,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(5.0),
                   topRight: Radius.circular(5.0),
@@ -310,7 +312,7 @@ class _HomeInfoState extends State<HomeInfo> {
     Widget gridBoxSmall(int section) {
       return Container(
         decoration: BoxDecoration(
-          color: Color(0xff243341),
+          color: AppColors().mediumTwitter,
           borderRadius: BorderRadius.circular(5.0),
         ),
         width: screenSize.width / 1.2,
@@ -347,7 +349,7 @@ class _HomeInfoState extends State<HomeInfo> {
                           child: Container(
                             width: screenSize.width / 1.4,
                             decoration: BoxDecoration(
-                              color: Color(0xff15202b),
+                              color: AppColors().darkTwitter,
                             ),
                             child: Padding(
                               padding: EdgeInsets.all(5.0),
@@ -361,7 +363,7 @@ class _HomeInfoState extends State<HomeInfo> {
                                       Text(
                                         "@" + handle,
                                         style: GoogleFonts.roboto(
-                                          color: Color(0xff45535e),
+                                          color: AppColors().lightTwitter,
                                           fontSize: 15.0,
                                         ),
                                       ),
@@ -370,13 +372,15 @@ class _HomeInfoState extends State<HomeInfo> {
                                           FlutterClipboard.copy(
                                               document['Tweet']);
                                           showCenterFlash(
-                                              position: FlashPosition.top,
-                                              style: FlashStyle.floating,
-                                              message: 'Copied Tweet');
+                                            position: FlashPosition.top,
+                                            style: FlashStyle.floating,
+                                            message: 'Copied Tweet',
+                                            context: context,
+                                          );
                                         },
                                         icon: Icon(
                                           Icons.copy,
-                                          color: Color(0xff45535e),
+                                          color: AppColors().lightTwitter,
                                           size: 18,
                                         ),
                                       ),
@@ -425,7 +429,7 @@ class _HomeInfoState extends State<HomeInfo> {
             ),
             Container(
               decoration: BoxDecoration(
-                color: Color(0xff15202b),
+                color: AppColors().darkTwitter,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(5.0),
                   topRight: Radius.circular(5.0),
@@ -534,7 +538,7 @@ class _HomeInfoState extends State<HomeInfo> {
       children: [
         Container(
           decoration: BoxDecoration(
-            color: Color(0xff243341),
+            color: AppColors().mediumTwitter,
             borderRadius: BorderRadius.circular(5.0),
           ),
           height: screenSize.height / 2.5,
@@ -568,7 +572,7 @@ class _HomeInfoState extends State<HomeInfo> {
                             ),
                             child: Container(
                               decoration: BoxDecoration(
-                                color: Color(0xff15202b),
+                                color: AppColors().darkTwitter,
                                 borderRadius: BorderRadius.circular(5.0),
                               ),
                               width: screenSize.width / 1.4,
@@ -578,7 +582,7 @@ class _HomeInfoState extends State<HomeInfo> {
                                 child: Container(
                                   width: screenSize.width / 1.4,
                                   decoration: BoxDecoration(
-                                    color: Color(0xff15202b),
+                                    color: AppColors().darkTwitter,
                                   ),
                                   child: Padding(
                                     padding: EdgeInsets.all(7),
@@ -630,7 +634,7 @@ class _HomeInfoState extends State<HomeInfo> {
               ),
               Container(
                 decoration: BoxDecoration(
-                  color: Color(0xff15202b),
+                  color: AppColors().darkTwitter,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(5.0),
                     topRight: Radius.circular(5.0),
@@ -686,7 +690,7 @@ class _HomeInfoState extends State<HomeInfo> {
         ),
         Container(
           decoration: BoxDecoration(
-            color: Color(0xff243341),
+            color: AppColors().mediumTwitter,
             borderRadius: BorderRadius.circular(5.0),
           ),
           height: screenSize.height / 2.5,
@@ -729,7 +733,7 @@ class _HomeInfoState extends State<HomeInfo> {
                             "@" + user.handle,
                             style: GoogleFonts.roboto(
                               height: 1.5,
-                              color: Color(0xff45535e),
+                              color: AppColors().lightTwitter,
                               fontSize: 15,
                             ),
                           ),
@@ -773,7 +777,7 @@ class _HomeInfoState extends State<HomeInfo> {
                           padding: EdgeInsets.all(5.0),
                           child: Container(
                             decoration: BoxDecoration(
-                              color: Color(0xff15202b),
+                              color: AppColors().darkTwitter,
                               borderRadius: BorderRadius.circular(5.0),
                             ),
                             child: Padding(
@@ -795,7 +799,7 @@ class _HomeInfoState extends State<HomeInfo> {
                                         "Retweets: ${tweets[index].retweetCount}",
                                         style: GoogleFonts.roboto(
                                           height: 1.5,
-                                          color: Color(0xff45535e),
+                                          color: AppColors().lightTwitter,
                                           fontSize: 15,
                                         ),
                                       ),
@@ -804,7 +808,7 @@ class _HomeInfoState extends State<HomeInfo> {
                                         "Likes: ${tweets[index].favoriteCount}",
                                         style: GoogleFonts.roboto(
                                           height: 1.5,
-                                          color: Color(0xff45535e),
+                                          color: AppColors().lightTwitter,
                                           fontSize: 15,
                                         ),
                                       ),
@@ -830,7 +834,7 @@ class _HomeInfoState extends State<HomeInfo> {
       children: [
         Container(
           decoration: BoxDecoration(
-            color: Color(0xff243341),
+            color: AppColors().mediumTwitter,
             borderRadius: BorderRadius.circular(5.0),
           ),
           height: screenSize.height / 2.5,
@@ -864,7 +868,7 @@ class _HomeInfoState extends State<HomeInfo> {
                             ),
                             child: Container(
                               decoration: BoxDecoration(
-                                color: Color(0xff15202b),
+                                color: AppColors().darkTwitter,
                                 borderRadius: BorderRadius.circular(5.0),
                               ),
                               width: screenSize.width / 1.4,
@@ -874,7 +878,7 @@ class _HomeInfoState extends State<HomeInfo> {
                                 child: Container(
                                   width: screenSize.width / 1.4,
                                   decoration: BoxDecoration(
-                                    color: Color(0xff15202b),
+                                    color: AppColors().darkTwitter,
                                   ),
                                   child: Padding(
                                     padding: EdgeInsets.all(7),
@@ -926,7 +930,7 @@ class _HomeInfoState extends State<HomeInfo> {
               ),
               Container(
                 decoration: BoxDecoration(
-                  color: Color(0xff15202b),
+                  color: AppColors().darkTwitter,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(5.0),
                     topRight: Radius.circular(5.0),

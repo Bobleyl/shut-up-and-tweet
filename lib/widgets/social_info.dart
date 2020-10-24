@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shut_up_and_tweet/ui/theme/colors.dart';
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 
@@ -11,7 +12,7 @@ class SocialInfo extends StatelessWidget {
       IconButton(
         icon: Icon(
           CustomIcons.MyFlutterApp.github_squared,
-          color: Color(0xff8c53ff),
+          color: AppColors().bleylDevPurple,
         ),
         onPressed: () {
           html.window.open(
@@ -23,7 +24,7 @@ class SocialInfo extends StatelessWidget {
       IconButton(
         icon: Icon(
           CustomIcons.MyFlutterApp.twitter_squared,
-          color: Color(0xff8c53ff),
+          color: AppColors().bleylDevPurple,
         ),
         onPressed: () {
           html.window.open(
@@ -35,7 +36,7 @@ class SocialInfo extends StatelessWidget {
       IconButton(
         icon: Icon(
           CustomIcons.MyFlutterApp.youtube_squared,
-          color: Color(0xff8c53ff),
+          color: AppColors().bleylDevPurple,
         ),
         onPressed: () {
           html.window.open(
@@ -47,7 +48,7 @@ class SocialInfo extends StatelessWidget {
       IconButton(
         icon: Icon(
           CustomIcons.MyFlutterApp.medium,
-          color: Color(0xff8c53ff),
+          color: AppColors().bleylDevPurple,
         ),
         onPressed: () {
           html.window.open(
@@ -59,7 +60,7 @@ class SocialInfo extends StatelessWidget {
       IconButton(
         icon: Icon(
           CustomIcons.MyFlutterApp.discord,
-          color: Color(0xff8c53ff),
+          color: AppColors().bleylDevPurple,
         ),
         onPressed: () {
           html.window.open(
