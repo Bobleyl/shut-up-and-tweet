@@ -59,6 +59,7 @@ class _ExploreDrawerState extends State<ExploreDrawer> {
               InkWell(
                 onTap: () {
                   context.read<FlutterFireAuthService>().signOut();
+                  Navigator.of(context).pushNamed('/');
                 },
                 child: Text(
                   'Sign Out',

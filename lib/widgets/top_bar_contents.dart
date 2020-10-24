@@ -67,7 +67,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                             style: GoogleFonts.lato(
                               fontSize: 25.0,
                               color: _isHovering[0]
-                                  ? AppColors().bleylDevPurple
+                                  ? AppColors().twitterLightBlue
                                   : Colors.white,
                             ),
                           ),
@@ -80,7 +80,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                             child: Container(
                               height: 2,
                               width: 20,
-                              color: AppColors().bleylDevPurple,
+                              color: AppColors().twitterLightBlue,
                             ),
                           )
                         ],
@@ -106,7 +106,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                             style: GoogleFonts.lato(
                               fontSize: 25.0,
                               color: _isHovering[1]
-                                  ? AppColors().bleylDevPurple
+                                  ? AppColors().twitterLightBlue
                                   : Colors.white,
                             ),
                           ),
@@ -119,7 +119,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                             child: Container(
                               height: 2,
                               width: 20,
-                              color: AppColors().bleylDevPurple,
+                              color: AppColors().twitterLightBlue,
                             ),
                           )
                         ],
@@ -135,6 +135,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                         });
                       },
                       onTap: () {
+                        Navigator.of(context).pushNamed('/');
                         context.read<FlutterFireAuthService>().signOut();
                       },
                       child: Column(
@@ -145,7 +146,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                             style: GoogleFonts.lato(
                               fontSize: 25.0,
                               color: _isHovering[2]
-                                  ? AppColors().bleylDevPurple
+                                  ? AppColors().twitterLightBlue
                                   : Colors.white,
                             ),
                           ),
@@ -158,7 +159,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                             child: Container(
                               height: 2,
                               width: 20,
-                              color: AppColors().bleylDevPurple,
+                              color: AppColors().twitterLightBlue,
                             ),
                           )
                         ],

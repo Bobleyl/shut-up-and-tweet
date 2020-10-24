@@ -12,7 +12,7 @@ class SocialInfo extends StatelessWidget {
       IconButton(
         icon: Icon(
           CustomIcons.MyFlutterApp.github_squared,
-          color: AppColors().bleylDevPurple,
+          color: AppColors().twitterBlue,
         ),
         onPressed: () {
           html.window.open(
@@ -24,7 +24,7 @@ class SocialInfo extends StatelessWidget {
       IconButton(
         icon: Icon(
           CustomIcons.MyFlutterApp.twitter_squared,
-          color: AppColors().bleylDevPurple,
+          color: AppColors().twitterBlue,
         ),
         onPressed: () {
           html.window.open(
@@ -36,7 +36,7 @@ class SocialInfo extends StatelessWidget {
       IconButton(
         icon: Icon(
           CustomIcons.MyFlutterApp.youtube_squared,
-          color: AppColors().bleylDevPurple,
+          color: AppColors().twitterBlue,
         ),
         onPressed: () {
           html.window.open(
@@ -48,7 +48,7 @@ class SocialInfo extends StatelessWidget {
       IconButton(
         icon: Icon(
           CustomIcons.MyFlutterApp.medium,
-          color: AppColors().bleylDevPurple,
+          color: AppColors().twitterBlue,
         ),
         onPressed: () {
           html.window.open(
@@ -60,7 +60,7 @@ class SocialInfo extends StatelessWidget {
       IconButton(
         icon: Icon(
           CustomIcons.MyFlutterApp.discord,
-          color: AppColors().bleylDevPurple,
+          color: AppColors().twitterBlue,
         ),
         onPressed: () {
           html.window.open(

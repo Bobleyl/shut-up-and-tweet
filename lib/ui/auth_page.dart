@@ -7,7 +7,6 @@ import 'package:shut_up_and_tweet/util/flutterfire_auth_service.dart';
 import 'package:shut_up_and_tweet/util/flutterfire_firestore.dart';
 import '../util/responsive_widget.dart';
 import 'package:provider/provider.dart';
-import '../util/my_flutter_app_icons.dart' as CustomIcons;
 
 import '../widgets/widgets.dart';
 
@@ -54,10 +53,7 @@ class _AuthPageState extends State<AuthPage> {
       extendBodyBehindAppBar: true,
       body: Container(
         decoration: BoxDecoration(
-          image: DecorationImage(
-            fit: BoxFit.fitWidth,
-            image: AssetImage("assets/backdrop.png"),
-          ),
+          color: AppColors().darkTwitter,
         ),
         child: SingleChildScrollView(
           controller: _scrollController,
@@ -87,51 +83,40 @@ class _HomeInfoState extends State<HomeInfo> {
     var screenSize = MediaQuery.of(context).size;
 
     final profileData = Container(
-        decoration: BoxDecoration(
-          color: AppColors().mediumTwitter,
-          borderRadius: BorderRadius.circular(5.0),
-        ),
-        width: 350,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: screenSize.height / 10,
+      decoration: BoxDecoration(
+        color: AppColors().darkTwitter,
+      ),
+      width: screenSize.width,
+      height: screenSize.height,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: AppColors().twitterBlue,
             ),
-            Image.asset(
-              'assets/logo_appbar.png',
-              height: 100,
-            ),
-            SizedBox(
-              height: screenSize.height / 10,
-            ),
-            MaterialButton(
-              onPressed: () {
-                context
-                    .read<FlutterFireAuthService>()
-                    .twitterSignIn()
-                    .then((credential) async {
-                  await addUser(credential.additionalUserInfo.username);
-                  await sameDayCheck();
-                });
-              },
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(7.0),
-                    color: Color(0xff1ea2f1),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+            width: screenSize.width / 2,
+            height: screenSize.height,
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: screenSize.width / 7,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Icon(
-                        CustomIcons.MyFlutterApp.twitter_squared,
+                        Icons.assessment,
                         color: Colors.white,
-                        size: 50,
+                        size: 40,
+                      ),
+                      SizedBox(
+                        width: 15,
                       ),
                       Text(
-                        "Log In With Twitter",
+                        "Set Goals",
                         style: GoogleFonts.roboto(
                           color: Colors.white,
                           fontSize: 30.0,
@@ -139,32 +124,327 @@ class _HomeInfoState extends State<HomeInfo> {
                       ),
                     ],
                   ),
-                ),
+                  SizedBox(
+                    height: screenSize.height / 40,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Icon(
+                        Icons.fast_forward_rounded,
+                        color: Colors.white,
+                        size: 40,
+                      ),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      Text(
+                        "Plan Ahead",
+                        style: GoogleFonts.roboto(
+                          color: Colors.white,
+                          fontSize: 30.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: screenSize.height / 40,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Icon(
+                        Icons.show_chart_rounded,
+                        color: Colors.white,
+                        size: 40,
+                      ),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      Text(
+                        "Analyze Results",
+                        style: GoogleFonts.roboto(
+                          color: Colors.white,
+                          fontSize: 30.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-            SizedBox(
-              height: screenSize.height / 10,
+          ),
+          Container(
+            width: screenSize.width / 2,
+            height: screenSize.height,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: screenSize.width / 3,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          "Manage your brand to it's fullest potential!",
+                          style: GoogleFonts.roboto(
+                            color: Colors.white,
+                            fontSize: 40,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          maxLines: 4,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: screenSize.height / 20,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                    left: screenSize.width / 12,
+                    bottom: screenSize.height / 80,
+                  ),
+                  child: Row(
+                    children: [
+                      Text(
+                        "Join Today",
+                        style: GoogleFonts.roboto(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                MaterialButton(
+                  onPressed: () {
+                    context
+                        .read<FlutterFireAuthService>()
+                        .twitterSignIn()
+                        .then((credential) async {
+                      await addUser(credential.additionalUserInfo.username);
+                      await sameDayCheck();
+                    });
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0),
+                        color: Color(0xff1ea2f1),
+                      ),
+                      width: screenSize.width / 3,
+                      height: 40,
+                      child: Text(
+                        "Sign Up / In",
+                        style: GoogleFonts.roboto(
+                          color: Colors.white,
+                          fontSize: 25.0,
+                          height: 1.5,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
+
+    final profileDataSmall = Container(
+      decoration: BoxDecoration(
+        color: AppColors().darkTwitter,
+      ),
+      width: screenSize.width,
+      height: screenSize.height,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: AppColors().twitterBlue,
+            ),
+            width: screenSize.width,
+            height: screenSize.height / 2,
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: screenSize.width / 20,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Icon(
+                        Icons.assessment,
+                        color: Colors.white,
+                        size: 40,
+                      ),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      Text(
+                        "Set Goals",
+                        style: GoogleFonts.roboto(
+                          color: Colors.white,
+                          fontSize: 30.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: screenSize.height / 40,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Icon(
+                        Icons.fast_forward_rounded,
+                        color: Colors.white,
+                        size: 40,
+                      ),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      Text(
+                        "Plan Ahead",
+                        style: GoogleFonts.roboto(
+                          color: Colors.white,
+                          fontSize: 30.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: screenSize.height / 40,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Icon(
+                        Icons.show_chart_rounded,
+                        color: Colors.white,
+                        size: 40,
+                      ),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      Text(
+                        "Analyze Results",
+                        style: GoogleFonts.roboto(
+                          color: Colors.white,
+                          fontSize: 30.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Container(
+            width: screenSize.width,
+            height: screenSize.height / 2,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: screenSize.width / 1.2,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          "Manage your brand to it's fullest potential!",
+                          style: GoogleFonts.roboto(
+                            color: Colors.white,
+                            fontSize: 40,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          maxLines: 4,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: screenSize.height / 20,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                    left: screenSize.width / 12,
+                    bottom: screenSize.height / 40,
+                  ),
+                  child: Row(
+                    children: [
+                      Text(
+                        "Join Today",
+                        style: GoogleFonts.roboto(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                MaterialButton(
+                  onPressed: () {
+                    context
+                        .read<FlutterFireAuthService>()
+                        .twitterSignIn()
+                        .then((credential) async {
+                      await addUser(credential.additionalUserInfo.username);
+                      await sameDayCheck();
+                    });
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0),
+                        color: Color(0xff1ea2f1),
+                      ),
+                      width: screenSize.width / 1.2,
+                      height: 40,
+                      child: Text(
+                        "Sign Up / In",
+                        style: GoogleFonts.roboto(
+                          color: Colors.white,
+                          fontSize: 25.0,
+                          height: 1.5,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
 
     return ResponsiveWidget(
       largeScreen: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          SizedBox(height: screenSize.height / 3),
           profileData,
-          SizedBox(height: screenSize.height / 3),
         ],
       ),
       smallScreen: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          SizedBox(height: screenSize.height / 3),
-          profileData,
-          SizedBox(height: screenSize.height / 3),
+          profileDataSmall,
         ],
       ),
     );

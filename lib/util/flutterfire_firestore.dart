@@ -140,6 +140,16 @@ Future<List<String>> getStrategySections() async {
   return list;
 }
 
+Future<void> updateStrategyName(String id, String newName) async {
+  String uid = FirebaseAuth.instance.currentUser.uid;
+  FirebaseFirestore.instance
+      .collection('Users')
+      .doc(uid)
+      .collection('Strategy')
+      .doc(id)
+      .update({'Name': newName});
+}
+
 // ignore: missing_return
 Future<String> getHandle() async {
   try {
