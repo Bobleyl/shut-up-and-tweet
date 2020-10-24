@@ -1,4 +1,5 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:circular_check_box/circular_check_box.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,6 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:clipboard/clipboard.dart';
+import 'package:shut_up_and_tweet/model/tweet.dart';
+import 'package:shut_up_and_tweet/model/user.dart';
+import 'package:shut_up_and_tweet/util/twitter_api.dart';
 
 import '../util/responsive_widget.dart';
 import '../util/flutterfire_firestore.dart';
@@ -95,6 +99,8 @@ class _HomeInfoState extends State<HomeInfo> {
   List<String> sections = ["temp", "temp", "temp", "temp"];
   List<String> sectionTitles = ["", "", "", ""];
   String handle = "";
+  UserData user = new UserData("", 0, 0, "", "", 0, 0);
+  List<Tweet> tweets = [];
   TextEditingController tweetController = TextEditingController();
   TextEditingController checklistController = TextEditingController();
   ScrollController scrollListController =
@@ -112,6 +118,18 @@ class _HomeInfoState extends State<HomeInfo> {
     sections = await getStrategySectionIds();
     sectionTitles = await getStrategySections();
     handle = await getHandle();
+    setState(() {});
+    getUserData();
+  }
+
+  getUserData() async {
+    user = await getUserInfo(handle);
+    setState(() {});
+    getUserTweets();
+  }
+
+  getUserTweets() async {
+    tweets = await getTweets(handle);
     setState(() {});
   }
 
@@ -1063,14 +1081,133 @@ class _HomeInfoState extends State<HomeInfo> {
           height: screenSize.height / 2.5,
           width: screenSize.width / 3.5,
           child: Center(
-            child: Text(
-              "Coming Soon: Analytics",
-              style: GoogleFonts.roboto(
-                color: Colors.white,
-                fontSize: 30.0,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.center,
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      child: CachedNetworkImage(
+                        imageUrl: user.profileImage,
+                        placeholder: (context, url) =>
+                            CircularProgressIndicator(),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                        height: 50,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            user.name,
+                            style: GoogleFonts.roboto(
+                              height: 1.5,
+                              color: Colors.white,
+                              fontSize: 20,
+                            ),
+                          ),
+                          Text(
+                            "@" + user.handle,
+                            style: GoogleFonts.roboto(
+                              height: 1.5,
+                              color: Color(0xff45535e),
+                              fontSize: 15,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      "Followers: ${user.followers}",
+                      style: GoogleFonts.roboto(
+                        height: 1.5,
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      "Tweet Count: ${user.statusCount}",
+                      style: GoogleFonts.roboto(
+                        height: 1.5,
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                    height: screenSize.height / 4,
+                    child: MediaQuery.removePadding(
+                      removeTop: true,
+                      context: context,
+                      child: ListView.builder(
+                        itemCount: tweets.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: EdgeInsets.all(5.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Color(0xff15202b),
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.all(5.0),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      tweets[index].tweet,
+                                      style: GoogleFonts.roboto(
+                                        height: 1.5,
+                                        color: Colors.white,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          "Retweets: ${tweets[index].retweetCount}",
+                                          style: GoogleFonts.roboto(
+                                            height: 1.5,
+                                            color: Color(0xff45535e),
+                                            fontSize: 15,
+                                          ),
+                                        ),
+                                        SizedBox(width: 10),
+                                        Text(
+                                          "Likes: ${tweets[index].favoriteCount}",
+                                          style: GoogleFonts.roboto(
+                                            height: 1.5,
+                                            color: Color(0xff45535e),
+                                            fontSize: 15,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    )),
+              ],
             ),
           ),
         ),

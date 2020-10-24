@@ -9,6 +9,8 @@
 .history
 .svn/
 
+lib/util/twitter_api.dart
+
 .firebase
 .firebaserc
 firebase.json
