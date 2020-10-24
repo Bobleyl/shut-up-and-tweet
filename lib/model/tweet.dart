@@ -11,7 +11,7 @@ class Tweet {
 
   factory Tweet.fromJson(Map<String, dynamic> json) {
     return Tweet(
-      json['text'].toString(),
+      json['full_text'].toString(),
       json['retweet_count'],
       json['favorite_count'],
     );
