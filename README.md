@@ -18,9 +18,9 @@ The hope is that it will be a place where users can store their tweet ideas and 
 * As a user I can see statistics on my Twitter follower count
 * As a user I can see statistics on my retweet and like counts
 * As a user I can change the name of the category
+* As a user I can edit previously added tweets
 
 ## Feature to be added:
 
-*
 * As a user I can hook-up my twitter account and post directly from the app
 * As a user I can tag people from twitter

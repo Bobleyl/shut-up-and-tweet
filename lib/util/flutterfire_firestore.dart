@@ -37,12 +37,24 @@ Future<void> addGrid(String uid, String gridName) async {
       .set({"Name": gridName});
 }
 
+Future<void> addGoals(String uid, String goalName) async {
+  FirebaseFirestore.instance
+      .collection('Users')
+      .doc(uid)
+      .collection('Strategy')
+      .doc(goalName)
+      .set({'Goal': 0});
+}
+
 Future<void> setUpGrid() async {
   String uid = FirebaseAuth.instance.currentUser.uid;
   await addGrid(uid, "Self Promotion");
   await addGrid(uid, "Quick Question");
   await addGrid(uid, "Industry Buzz");
   await addGrid(uid, "Networking");
+  await addGoals(uid, 'Followers');
+  await addGoals(uid, 'Tweets');
+  await addGoals(uid, 'Impressions');
 }
 
 Future<void> updateTweetCount() async {
@@ -82,6 +94,18 @@ Future<void> addTweet(String tweet, String section) async {
     "Date": DateTime.now().toIso8601String(),
   });
   await updateTweetCount();
+}
+
+Future<void> updateTweet(String tweetId, String tweet, String sectionId) async {
+  String uid = FirebaseAuth.instance.currentUser.uid;
+  FirebaseFirestore.instance
+      .collection('Users')
+      .doc(uid)
+      .collection('Strategy')
+      .doc(sectionId)
+      .collection('Backlog')
+      .doc(tweetId)
+      .update({"Tweet": tweet});
 }
 
 Future<void> deleteTweet(String id, String section) async {
@@ -222,4 +246,14 @@ Future<void> deleteFromChecklist(String id) async {
       .collection('Checklist')
       .doc(id)
       .delete();
+}
+
+Future<void> changeFollowerGoal(int goal) async {
+  String uid = FirebaseAuth.instance.currentUser.uid;
+  FirebaseFirestore.instance
+      .collection('Users')
+      .doc(uid)
+      .collection('Goals')
+      .doc("Followers")
+      .update({"Goal": goal});
 }

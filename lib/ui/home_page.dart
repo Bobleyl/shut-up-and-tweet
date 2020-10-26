@@ -193,22 +193,48 @@ class _HomeInfoState extends State<HomeInfo> {
                                           fontSize: 15.0,
                                         ),
                                       ),
-                                      IconButton(
-                                        onPressed: () {
-                                          FlutterClipboard.copy(
-                                              document['Tweet']);
-                                          showCenterFlash(
-                                            position: FlashPosition.top,
-                                            style: FlashStyle.floating,
-                                            message: 'Copied Tweet',
-                                            context: context,
-                                          );
-                                        },
-                                        icon: Icon(
-                                          Icons.copy,
-                                          color: AppColors().lightTwitter,
-                                          size: 18,
-                                        ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          IconButton(
+                                            onPressed: () {
+                                              tweetController.text =
+                                                  document['Tweet'];
+                                              showPopup(
+                                                section,
+                                                tweetController,
+                                                sections,
+                                                document.id,
+                                                2,
+                                                false,
+                                                context,
+                                              );
+                                            },
+                                            icon: Icon(
+                                              Icons.edit_outlined,
+                                              color: AppColors().lightTwitter,
+                                              size: 18,
+                                            ),
+                                          ),
+                                          IconButton(
+                                            onPressed: () {
+                                              FlutterClipboard.copy(
+                                                  document['Tweet']);
+                                              showCenterFlash(
+                                                position: FlashPosition.top,
+                                                style: FlashStyle.floating,
+                                                message: 'Copied Tweet',
+                                                context: context,
+                                              );
+                                            },
+                                            icon: Icon(
+                                              Icons.copy,
+                                              color: AppColors().lightTwitter,
+                                              size: 18,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
@@ -314,7 +340,9 @@ class _HomeInfoState extends State<HomeInfo> {
                             section,
                             tweetController,
                             sections,
+                            "",
                             2,
+                            true,
                             context,
                           );
                         },
@@ -510,7 +538,9 @@ class _HomeInfoState extends State<HomeInfo> {
                             section,
                             tweetController,
                             sections,
+                            "",
                             1,
+                            true,
                             context,
                           );
                         },
@@ -908,11 +938,223 @@ class _HomeInfoState extends State<HomeInfo> {
       ],
     );
 
+    final goalPanel = Container(
+      decoration: BoxDecoration(
+        color: AppColors().mediumTwitter,
+        borderRadius: BorderRadius.circular(5.0),
+      ),
+      height: screenSize.height / 2.5,
+      width: screenSize.width / 1.12,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: AppColors().darkTwitter,
+              borderRadius: BorderRadius.circular(5.0),
+            ),
+            width: screenSize.width / 4,
+            height: screenSize.height / 3,
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 15.0),
+                  child: Text(
+                    "Followers Goal",
+                    style: GoogleFonts.roboto(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 32,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      user?.followers.toString(),
+                      style: GoogleFonts.roboto(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 36,
+                      ),
+                    ),
+                    Text(
+                      "/",
+                      style: GoogleFonts.roboto(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 36,
+                      ),
+                    ),
+                    StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection('Users')
+                          .doc(FirebaseAuth.instance.currentUser.uid)
+                          .collection('Goals')
+                          .doc("Followers")
+                          .snapshots(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<DocumentSnapshot> snapshot) {
+                        if (!snapshot.hasData) {
+                          return CircularProgressIndicator();
+                        }
+
+                        return Text(
+                          snapshot.data.data()['Goal'].toString(),
+                          style: GoogleFonts.roboto(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 36,
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5.0),
+                    color: AppColors().mediumTwitter,
+                  ),
+                  child: MaterialButton(
+                    onPressed: () async {
+                      await changeFollowerGoal(1500);
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 15.0) +
+                          EdgeInsets.symmetric(vertical: 5.0),
+                      child: Text(
+                        "Change Goal",
+                        style: GoogleFonts.roboto(
+                          color: Colors.white,
+                          fontSize: 20.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              color: AppColors().darkTwitter,
+              borderRadius: BorderRadius.circular(5.0),
+            ),
+            width: screenSize.width / 4,
+            height: screenSize.height / 3,
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 15.0),
+                  child: Text(
+                    "Tweets Goal",
+                    style: GoogleFonts.roboto(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 32,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "938",
+                      style: GoogleFonts.roboto(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 36,
+                      ),
+                    ),
+                    Text(
+                      "/",
+                      style: GoogleFonts.roboto(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 36,
+                      ),
+                    ),
+                    Text(
+                      "1200",
+                      style: GoogleFonts.roboto(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 36,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              color: AppColors().darkTwitter,
+              borderRadius: BorderRadius.circular(5.0),
+            ),
+            width: screenSize.width / 4,
+            height: screenSize.height / 3,
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 15.0),
+                  child: Text(
+                    "Impressions Goal",
+                    style: GoogleFonts.roboto(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 32,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "211",
+                      style: GoogleFonts.roboto(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 36,
+                      ),
+                    ),
+                    Text(
+                      "/",
+                      style: GoogleFonts.roboto(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 36,
+                      ),
+                    ),
+                    Text(
+                      "350",
+                      style: GoogleFonts.roboto(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 36,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+
     return ResponsiveWidget(
       largeScreen: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
+          SizedBox(height: screenSize.height / 20),
+          goalPanel,
           SizedBox(height: screenSize.height / 20),
           checklist,
           SizedBox(height: screenSize.height / 20),

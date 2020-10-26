@@ -54,7 +54,9 @@ AwesomeDialog showPopup(
   int section,
   TextEditingController tweetController,
   List<String> sections,
+  String tweetId,
   int size,
+  bool type,
   BuildContext context,
 ) {
   AwesomeDialog dialog;
@@ -63,6 +65,9 @@ AwesomeDialog showPopup(
     width: MediaQuery.of(context).size.width / size,
     animType: AnimType.SCALE,
     dialogType: DialogType.NO_HEADER,
+    onDissmissCallback: () {
+      tweetController.text = "";
+    },
     body: StatefulBuilder(
       builder: (context, setState) {
         return Center(
@@ -155,7 +160,16 @@ AwesomeDialog showPopup(
                           message: 'You need to shorten your tweet',
                         );
                       } else {
-                        await addTweet(tweetController.text, sections[section]);
+                        if (type) {
+                          await addTweet(
+                              tweetController.text, sections[section]);
+                        } else {
+                          await updateTweet(
+                            tweetId,
+                            tweetController.text,
+                            sections[section],
+                          );
+                        }
                         tweetController.text = "";
                         dialog.dissmiss();
                       }
@@ -164,7 +178,7 @@ AwesomeDialog showPopup(
                       padding: EdgeInsets.symmetric(horizontal: 15.0) +
                           EdgeInsets.symmetric(vertical: 5.0),
                       child: Text(
-                        "Add Tweet",
+                        type ? "Add Tweet" : "Update Tweet",
                         style: GoogleFonts.roboto(
                           color: Colors.white,
                           fontSize: 20.0,
