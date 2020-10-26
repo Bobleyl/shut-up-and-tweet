@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shut_up_and_tweet/ui/home_page.dart';
 import 'package:shut_up_and_tweet/ui/theme/colors.dart';
 import 'package:shut_up_and_tweet/util/flutterfire_auth_service.dart';
 import 'package:shut_up_and_tweet/util/flutterfire_firestore.dart';
@@ -41,7 +40,10 @@ class _AuthPageState extends State<AuthPage> {
 
     if (firebaseUser != null) {
       print("Home View");
-      return HomePage();
+      Future.delayed(const Duration(milliseconds: 1500), () {
+        print("delayed");
+        Navigator.of(context).pushNamed('/home');
+      });
     }
 
     var screenSize = MediaQuery.of(context).size;
