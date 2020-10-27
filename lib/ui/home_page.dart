@@ -5,13 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'package:shut_up_and_tweet/model/tweet.dart';
-import 'package:shut_up_and_tweet/model/user.dart';
+import 'package:shut_up_and_tweet/model/model.dart';
 import 'package:shut_up_and_tweet/ui/theme/colors.dart';
 import 'package:shut_up_and_tweet/util/twitter_api.dart';
-import 'package:shut_up_and_tweet/widgets/admin_panel.dart';
-import 'package:shut_up_and_tweet/widgets/dialogs.dart';
-import 'package:shut_up_and_tweet/widgets/gridbox.dart';
 
 import '../util/responsive_widget.dart';
 import '../util/flutterfire_firestore.dart';
