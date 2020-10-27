@@ -12,6 +12,10 @@ class FlutterFireAuthService {
     await _firebaseAuth.signOut();
   }
 
+  Future<String> getUid() async {
+    return _firebaseAuth.currentUser.uid;
+  }
+
   Future<UserCredential> twitterSignIn() async {
     return await FirebaseAuth.instance.signInWithPopup(twitterProvider);
   }
