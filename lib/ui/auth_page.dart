@@ -40,8 +40,9 @@ class _AuthPageState extends State<AuthPage> {
 
     if (firebaseUser != null) {
       print("Home View");
-      Future.delayed(const Duration(milliseconds: 1500), () {
+      Future.delayed(const Duration(milliseconds: 1500), () async {
         print("delayed");
+        await sameDayCheck();
         Navigator.of(context).pushNamed('/home');
       });
     }
